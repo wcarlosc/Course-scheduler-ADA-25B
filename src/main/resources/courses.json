@@ -1,72 +1,137 @@
+
 [
   {
-    "id": "MAT101-A",
-    "subject": "Matematica",
+    "id": "IDSW-A",
+    "subject": "Introduccion al Desarrollo de Software",
     "group": "A",
     "schedules": [
-      { "day": "Lunes", "start": 8, "end": 10 },
-      { "day": "Miercoles", "start": 8, "end": 10 }
+      { "day": "Lunes", "start": 420, "end": 520 },
+      { "day": "Lunes", "start": 840, "end": 940 }
     ]
   },
   {
-    "id": "MAT101-B",
-    "subject": "Matematica",
+    "id": "IDSW-B",
+    "subject": "Introduccion al Desarrollo de Software",
     "group": "B",
     "schedules": [
-      { "day": "Martes", "start": 14, "end": 16 },
-      { "day": "Jueves", "start": 14, "end": 16 }
+      { "day": "Lunes", "start": 840, "end": 940 },
+      { "day": "Martes", "start": 840, "end": 940 },
+      { "day": "Jueves", "start": 740, "end": 840 }
     ]
   },
   {
-    "id": "FIS101-A",
-    "subject": "Fisica",
+    "id": "MAT-A",
+    "subject": "Matematica Basica",
     "group": "A",
     "schedules": [
-      { "day": "Lunes", "start": 9, "end": 11 },
-      { "day": "Viernes", "start": 9, "end": 11 }
+      { "day": "Martes", "start": 470, "end": 580 },
+      { "day": "Jueves", "start": 420, "end": 520 }
     ]
   },
   {
-    "id": "FIS101-B",
-    "subject": "Fisica",
+    "id": "MAT-B",
+    "subject": "Matematica Basica",
     "group": "B",
     "schedules": [
-      { "day": "Martes", "start": 10, "end": 12 },
-      { "day": "Jueves", "start": 10, "end": 12 }
+      { "day": "Viernes", "start": 1000, "end": 1110 },
+      { "day": "Jueves", "start": 1110, "end": 1210 }
     ]
   },
   {
-    "id": "PROG101-A",
-    "subject": "Programacion",
+    "id": "MAT-C",
+    "subject": "Matematica Basica",
+    "group": "C",
+    "schedules": [
+      { "day": "Miercoles", "start": 840, "end": 940 },
+      { "day": "Viernes", "start": 840, "end": 890 }
+    ]
+  },
+  {
+    "id": "ALG-A",
+    "subject": "Algebra Lineal",
     "group": "A",
     "schedules": [
-      { "day": "Miercoles", "start": 8, "end": 11 }
+      { "day": "Lunes", "start": 580, "end": 690 },
+      { "day": "Miercoles", "start": 420, "end": 580 }
     ]
   },
   {
-    "id": "PROG101-B",
-    "subject": "Programacion",
+    "id": "ALG-B",
+    "subject": "Algebra Lineal",
     "group": "B",
     "schedules": [
-      { "day": "Viernes", "start": 14, "end": 17 }
+      { "day": "Lunes", "start": 1110, "end": 1210 },
+      { "day": "Martes", "start": 1110, "end": 1210 }
     ]
   },
   {
-    "id": "ALG101-A",
-    "subject": "Algoritmos",
+    "id": "MTA-A",
+    "subject": "Metodologia de Trabajo Academico",
     "group": "A",
     "schedules": [
-      { "day": "Lunes", "start": 14, "end": 16 },
-      { "day": "Miercoles", "start": 14, "end": 16 }
+      { "day": "Martes", "start": 580, "end": 690 },
+      { "day": "Viernes", "start": 580, "end": 690 }
     ]
   },
   {
-    "id": "ALG101-B",
-    "subject": "Algoritmos",
+    "id": "MTA-B",
+    "subject": "Metodologia de Trabajo Academico",
     "group": "B",
     "schedules": [
-      { "day": "Martes", "start": 8, "end": 10 },
-      { "day": "Jueves", "start": 8, "end": 10 }
+      { "day": "Miercoles", "start": 1110, "end": 1210 },
+      { "day": "Viernes", "start": 1110, "end": 1210 }
+    ]
+  },
+  {
+    "id": "ED-A",
+    "subject": "Estructuras Discrtas I",
+    "group": "A",
+    "schedules": [
+      { "day": "Miercoles", "start": 580, "end": 690 },
+      { "day": "Jueves", "start": 580, "end": 690 }
+    ]
+  },
+  {
+    "id": "ED-B",
+    "subject": "Estructuras Discrtas I",
+    "group": "B",
+    "schedules": [
+      { "day": "Lunes", "start": 1000, "end": 1110 },
+      { "day": "Miercoles", "start": 950, "end": 1060 }
+    ]
+  },
+  {
+    "id": "ING-A",
+    "subject": "Introduccion a la Ingenieria",
+    "group": "A",
+    "schedules": [
+      { "day": "Lunes", "start": 690, "end": 790 },
+      { "day": "Miercoles", "start": 690, "end": 790 }
+    ]
+  },
+  {
+    "id": "ING-B",
+    "subject": "Introduccion a la Ingenieria",
+    "group": "B",
+    "schedules": [
+      { "day": "Martes", "start": 950, "end": 1060 },
+      { "day": "Jueves", "start": 1000, "end": 1110 }
+    ]
+  },
+  {
+    "id": "RHET-A",
+    "subject": "Relaciones Humanas en Empresas de Desarrollo de Software y Base Tecnologica",
+    "group": "A",
+    "schedules": [
+      { "day": "Viernes", "start": 420, "end": 580 }
+    ]
+  },
+  {
+    "id": "RHET-B",
+    "subject": "Relaciones Humanas en Empresas de Desarrollo de Software y Base Tecnologica",
+    "group": "B",
+    "schedules": [
+      { "day": "Jueves", "start": 840, "end": 1000 }
     ]
   }
 ]
