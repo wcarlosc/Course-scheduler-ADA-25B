@@ -1,0 +1,72 @@
+[
+  {
+    "id": "MAT101-A",
+    "subject": "Matematica",
+    "group": "A",
+    "schedules": [
+      { "day": "Lunes", "start": 8, "end": 10 },
+      { "day": "Miercoles", "start": 8, "end": 10 }
+    ]
+  },
+  {
+    "id": "MAT101-B",
+    "subject": "Matematica",
+    "group": "B",
+    "schedules": [
+      { "day": "Martes", "start": 14, "end": 16 },
+      { "day": "Jueves", "start": 14, "end": 16 }
+    ]
+  },
+  {
+    "id": "FIS101-A",
+    "subject": "Fisica",
+    "group": "A",
+    "schedules": [
+      { "day": "Lunes", "start": 9, "end": 11 },
+      { "day": "Viernes", "start": 9, "end": 11 }
+    ]
+  },
+  {
+    "id": "FIS101-B",
+    "subject": "Fisica",
+    "group": "B",
+    "schedules": [
+      { "day": "Martes", "start": 10, "end": 12 },
+      { "day": "Jueves", "start": 10, "end": 12 }
+    ]
+  },
+  {
+    "id": "PROG101-A",
+    "subject": "Programacion",
+    "group": "A",
+    "schedules": [
+      { "day": "Miercoles", "start": 8, "end": 11 }
+    ]
+  },
+  {
+    "id": "PROG101-B",
+    "subject": "Programacion",
+    "group": "B",
+    "schedules": [
+      { "day": "Viernes", "start": 14, "end": 17 }
+    ]
+  },
+  {
+    "id": "ALG101-A",
+    "subject": "Algoritmos",
+    "group": "A",
+    "schedules": [
+      { "day": "Lunes", "start": 14, "end": 16 },
+      { "day": "Miercoles", "start": 14, "end": 16 }
+    ]
+  },
+  {
+    "id": "ALG101-B",
+    "subject": "Algoritmos",
+    "group": "B",
+    "schedules": [
+      { "day": "Martes", "start": 8, "end": 10 },
+      { "day": "Jueves", "start": 8, "end": 10 }
+    ]
+  }
+]

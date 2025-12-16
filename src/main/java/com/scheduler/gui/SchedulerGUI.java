@@ -1,0 +1,617 @@
+package com.scheduler.gui;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import com.scheduler.algorithm.AlgorithmBenchmark;
+import com.scheduler.algorithm.AlgorithmType;
+import com.scheduler.algorithm.BenchmarkResult;
+import com.scheduler.logic.DataLoader;
+import com.scheduler.model.Course;
+
+import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Separator;
+import javafx.scene.control.TextArea;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.stage.Stage;
+
+public class SchedulerGUI extends Application {
+
+    private List<Course> allCourses;
+    private VBox subjectsContainer;
+    private VBox resultsContainer;
+    private Label statusLabel;
+    private Map<String, CheckBox> subjectCheckBoxes;
+    private ComboBox<AlgorithmType> algorithmSelector;
+    private CheckBox compareAllCheckbox;
+
+    // Colores
+    private static final String PRIMARY_COLOR = "#FF6B35"; // Naranja
+    private static final String SECONDARY_COLOR = "#F7931E"; // Naranja claro
+    private static final String DARK_BG = "#1a1a1a"; // Negro oscuro
+    private static final String CARD_BG = "#2d2d2d"; // Gris oscuro
+    private static final String TEXT_COLOR = "#ffffff"; // Blanco
+    private static final String ACCENT_COLOR = "#ff8c5a"; // Naranja suave
+
+    @Override
+    public void start(Stage primaryStage) {
+        // Cargar datos
+        DataLoader loader = new DataLoader();
+        allCourses = loader.loadCourses("courses.json");
+
+        if (allCourses.isEmpty()) {
+            showError("Error al cargar los cursos desde el archivo JSON");
+            return;
+        }
+
+        // Layout principal
+        BorderPane root = new BorderPane();
+        root.setStyle("-fx-background-color: " + DARK_BG + ";");
+
+        // Header
+        VBox header = createHeader();
+        root.setTop(header);
+
+        // Panel izquierdo - Selección de materias
+        VBox leftPanel = createLeftPanel();
+        root.setLeft(leftPanel);
+
+        // Panel derecho - Resultados
+        VBox rightPanel = createRightPanel();
+        root.setCenter(rightPanel);
+
+        // Escena
+        Scene scene = new Scene(root, 1200, 700);
+        primaryStage.setTitle("Sistema de generacion de Horarios");
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+
+    private VBox createHeader() {
+        VBox header = new VBox(10);
+        header.setPadding(new Insets(20));
+        header.setAlignment(Pos.CENTER);
+        header.setStyle("-fx-background-color: linear-gradient(to right, " + PRIMARY_COLOR + ", " + SECONDARY_COLOR + ");");
+
+        Label title = new Label("🎓 Sistema de generacion de Horarios");
+        title.setFont(Font.font("Segoe UI", FontWeight.BOLD, 28));
+        title.setStyle("-fx-text-fill: " + TEXT_COLOR + ";");
+
+        // Label subtitle = new Label("Comparación de Algoritmos");
+        // subtitle.setFont(Font.font("Segoe UI", FontWeight.NORMAL, 14));
+        // subtitle.setStyle("-fx-text-fill: " + TEXT_COLOR + "; -fx-opacity: 0.9;");
+
+        header.getChildren().addAll(title);
+        return header;
+    }
+
+    private VBox createLeftPanel() {
+        VBox panel = new VBox(15);
+        panel.setPadding(new Insets(20));
+        panel.setPrefWidth(380);
+        panel.setStyle("-fx-background-color: " + CARD_BG + ";");
+
+        // Título
+        Label title = new Label(" Configuración");
+        title.setFont(Font.font("Segoe UI", FontWeight.BOLD, 18));
+        title.setStyle("-fx-text-fill: " + PRIMARY_COLOR + ";");
+
+        // Selector de algoritmo
+        Label algoLabel = new Label("Tipo de solución:");
+        algoLabel.setFont(Font.font("Segoe UI", FontWeight.BOLD, 14));
+        algoLabel.setStyle("-fx-text-fill: " + TEXT_COLOR + ";");
+
+        algorithmSelector = new ComboBox<>();
+        algorithmSelector.getItems().addAll(AlgorithmType.values());
+        algorithmSelector.setValue(AlgorithmType.BACKTRACKING);
+        algorithmSelector.setPrefWidth(320);
+        algorithmSelector.setStyle(
+            "-fx-background-color: " + TEXT_COLOR  + ";" +
+            "-fx-text-fill: " + TEXT_COLOR + ";" 
+        );
+
+        // Checkbox para comparar todos
+        compareAllCheckbox = new CheckBox("Solo ejecutar test");
+        compareAllCheckbox.setFont(Font.font("Segoe UI", 12));
+        compareAllCheckbox.setStyle("-fx-text-fill: " + ACCENT_COLOR + ";");
+        compareAllCheckbox.setOnAction(e -> {
+            algorithmSelector.setDisable(compareAllCheckbox.isSelected());
+        });
+
+        Separator sep1 = new Separator();
+        sep1.setStyle("-fx-background-color: " + PRIMARY_COLOR + ";");
+
+        // Título materias
+        Label subjectsTitle = new Label(" Selecciona materias:");
+        subjectsTitle.setFont(Font.font("Segoe UI", FontWeight.BOLD, 14));
+        subjectsTitle.setStyle("-fx-text-fill: " + TEXT_COLOR + ";");
+
+        // Contenedor de checkboxes
+        subjectsContainer = new VBox(10);
+        subjectsContainer.setPadding(new Insets(10, 0, 0, 0));
+        
+        subjectCheckBoxes = new HashMap<>();
+        List<String> availableSubjects = allCourses.stream()
+                .map(Course::getSubject)
+                .distinct()
+                .sorted()
+                .collect(Collectors.toList());
+
+        for (String subject : availableSubjects) {
+            long groupCount = allCourses.stream()
+                    .filter(c -> c.getSubject().equals(subject))
+                    .count();
+
+            CheckBox checkBox = new CheckBox(subject + " (" + groupCount + " grupos)");
+            checkBox.setFont(Font.font("Segoe UI", 14));
+            checkBox.setStyle(
+                "-fx-text-fill: " + TEXT_COLOR + ";" +
+                "-fx-cursor: hand;"
+            );
+            
+            // Estilo personalizado para el checkbox
+            checkBox.setOnMouseEntered(e -> 
+                checkBox.setStyle("-fx-text-fill: " + ACCENT_COLOR + "; -fx-cursor: hand;")
+            );
+            checkBox.setOnMouseExited(e -> 
+                checkBox.setStyle("-fx-text-fill: " + TEXT_COLOR + "; -fx-cursor: hand;")
+            );
+
+            subjectCheckBoxes.put(subject, checkBox);
+            subjectsContainer.getChildren().add(checkBox);
+        }
+
+        ScrollPane scrollPane = new ScrollPane(subjectsContainer);
+        scrollPane.setFitToWidth(true);
+        scrollPane.setStyle("-fx-background: " + CARD_BG + "; -fx-background-color: " + CARD_BG + ";");
+        VBox.setVgrow(scrollPane, Priority.ALWAYS);
+
+        // Botones
+        HBox buttons = new HBox(10);
+        buttons.setAlignment(Pos.CENTER);
+
+        Button generateButton = createStyledButton("Generar", PRIMARY_COLOR);
+        generateButton.setOnAction(e -> generateSchedules());
+
+        Button clearButton = createStyledButton("Limpiar", SECONDARY_COLOR);
+        clearButton.setOnAction(e -> clearSelection());
+
+        buttons.getChildren().addAll(generateButton, clearButton);
+
+        // Status label
+        statusLabel = new Label("");
+        statusLabel.setFont(Font.font("Segoe UI", 12));
+        statusLabel.setStyle("-fx-text-fill: " + PRIMARY_COLOR + ";");
+        statusLabel.setWrapText(true);
+
+        panel.getChildren().addAll(title, algoLabel, algorithmSelector, compareAllCheckbox, 
+                                   sep1, subjectsTitle, scrollPane, buttons, statusLabel);
+        return panel;
+    }
+
+    private VBox createRightPanel() {
+        VBox panel = new VBox(15);
+        panel.setPadding(new Insets(20));
+        panel.setStyle("-fx-background-color: " + DARK_BG + ";");
+
+        Label title = new Label("Horarios Generados");
+        title.setFont(Font.font("Segoe UI", FontWeight.BOLD, 18));
+        title.setStyle("-fx-text-fill: " + PRIMARY_COLOR + ";");
+
+        resultsContainer = new VBox(15);
+        resultsContainer.setPadding(new Insets(10));
+
+        Label placeholder = new Label("Selecciona las materias y presiona 'Generar'");
+        placeholder.setFont(Font.font("Segoe UI", FontWeight.NORMAL, 14));
+        placeholder.setStyle("-fx-text-fill: " + TEXT_COLOR + "; -fx-opacity: 0.6;");
+        placeholder.setAlignment(Pos.CENTER);
+        resultsContainer.getChildren().add(placeholder);
+
+        ScrollPane scrollPane = new ScrollPane(resultsContainer);
+        scrollPane.setFitToWidth(true);
+        scrollPane.setStyle("-fx-background: " + DARK_BG + "; -fx-background-color: " + DARK_BG + ";");
+        VBox.setVgrow(scrollPane, Priority.ALWAYS);
+
+        panel.getChildren().addAll(title, scrollPane);
+        return panel;
+    }
+
+    private Button createStyledButton(String text, String color) {
+        Button button = new Button(text);
+        button.setFont(Font.font("Segoe UI", FontWeight.BOLD, 14));
+        button.setPrefWidth(150);
+        button.setStyle(
+            "-fx-background-color: " + color + ";" +
+            "-fx-text-fill: white;" +
+            "-fx-background-radius: 8;" +
+            "-fx-cursor: hand;" +
+            "-fx-padding: 10 20;"
+        );
+
+        button.setOnMouseEntered(e -> 
+            button.setStyle(
+                "-fx-background-color: derive(" + color + ", 20%);" +
+                "-fx-text-fill: white;" +
+                "-fx-background-radius: 8;" +
+                "-fx-cursor: hand;" +
+                "-fx-padding: 10 20;" +
+                "-fx-scale-x: 1.05;" +
+                "-fx-scale-y: 1.05;"
+            )
+        );
+
+        button.setOnMouseExited(e -> 
+            button.setStyle(
+                "-fx-background-color: " + color + ";" +
+                "-fx-text-fill: white;" +
+                "-fx-background-radius: 8;" +
+                "-fx-cursor: hand;" +
+                "-fx-padding: 10 20;"
+            )
+        );
+
+        return button;
+    }
+
+    private void generateSchedules() {
+        List<String> selectedSubjects = subjectCheckBoxes.entrySet().stream()
+                .filter(entry -> entry.getValue().isSelected())
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
+
+        if (selectedSubjects.isEmpty()) {
+            statusLabel.setText(" Selecciona al menos una materia");
+            statusLabel.setStyle("-fx-text-fill: " + SECONDARY_COLOR + ";");
+            return;
+        }
+
+        if (compareAllCheckbox.isSelected()) {
+            runComparison(selectedSubjects);
+        } else {
+            runSingleAlgorithm(selectedSubjects);
+        }
+    }
+
+    private void runSingleAlgorithm(List<String> selectedSubjects) {
+        statusLabel.setText(" Generando horarios...");
+        statusLabel.setStyle("-fx-text-fill: " + PRIMARY_COLOR + ";");
+
+        AlgorithmBenchmark benchmark = new AlgorithmBenchmark(allCourses);
+        BenchmarkResult result = benchmark.runBenchmark(algorithmSelector.getValue(), selectedSubjects);
+
+        displaySingleResult(result);
+    }
+
+    private void runComparison(List<String> selectedSubjects) {
+        statusLabel.setText(" Comparando algoritmos...");
+        statusLabel.setStyle("-fx-text-fill: " + PRIMARY_COLOR + ";");
+
+        AlgorithmBenchmark benchmark = new AlgorithmBenchmark(allCourses);
+        List<BenchmarkResult> results = benchmark.runAllBenchmarks(selectedSubjects);
+
+        displayComparisonResults(results, benchmark);
+    }
+
+    private void displaySingleResult(BenchmarkResult result) {
+        resultsContainer.getChildren().clear();
+
+        if (result.getSolutions().isEmpty()) {
+            statusLabel.setText(" No se encontraron horarios compatibles");
+            statusLabel.setStyle("-fx-text-fill: " + SECONDARY_COLOR + ";");
+
+            Label noResults = new Label("No hay combinaciones de horarios sin conflictos");
+            noResults.setFont(Font.font("Segoe UI", 14));
+            noResults.setStyle("-fx-text-fill: " + TEXT_COLOR + "; -fx-opacity: 0.6;");
+            resultsContainer.getChildren().add(noResults);
+            return;
+        }
+
+        statusLabel.setText(String.format(" %s: %d solución(es) en %dms, %.2fMB, calidad: %.2f",
+            result.getAlgorithmType().getDisplayName(),
+            result.getSolutionsFound(),
+            result.getExecutionTimeMs(),
+            result.getMemoryUsedMB(),
+            result.getQualityScore()));
+        statusLabel.setStyle("-fx-text-fill: #4CAF50;");
+
+        // Mostrar métricas
+        VBox metricsCard = createMetricsCard(result);
+        resultsContainer.getChildren().add(metricsCard);
+
+        // Mostrar horarios
+        for (int i = 0; i < result.getSolutions().size(); i++) {
+            VBox scheduleCard = createScheduleCard(result.getSolutions().get(i), i + 1);
+            resultsContainer.getChildren().add(scheduleCard);
+        }
+    }
+
+    private void displayComparisonResults(List<BenchmarkResult> results, AlgorithmBenchmark benchmark) {
+        resultsContainer.getChildren().clear();
+
+        statusLabel.setText(" Comparación completada");
+        statusLabel.setStyle("-fx-text-fill: #4CAF50;");
+
+        // Tabla comparativa
+        VBox comparisonCard = createComparisonCard(results, benchmark);
+        resultsContainer.getChildren().add(comparisonCard);
+
+        // Gráficos de comparación
+        VBox chartsCard = createChartsCard(results);
+        resultsContainer.getChildren().add(chartsCard);
+    }
+
+    private VBox createMetricsCard(BenchmarkResult result) {
+        VBox card = new VBox(10);
+        card.setPadding(new Insets(15));
+        card.setStyle(
+            "-fx-background-color: " + CARD_BG + ";" +
+            "-fx-background-radius: 10;" +
+            "-fx-border-color: " + SECONDARY_COLOR + ";" +
+            "-fx-border-width: 2;" +
+            "-fx-border-radius: 10;"
+        );
+
+        Label header = new Label(" Rendimiento");
+        header.setFont(Font.font("Segoe UI", FontWeight.BOLD, 16));
+        header.setStyle("-fx-text-fill: " + SECONDARY_COLOR + ";");
+
+        GridPane grid = new GridPane();
+        grid.setHgap(20);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(10));
+
+        addMetricRow(grid, 0, "Tiempo:", result.getExecutionTimeMs() + " ms");
+        addMetricRow(grid, 1, "Memoria:", String.format("%.2f MB", result.getMemoryUsedMB()));
+        addMetricRow(grid, 2, "Soluciones:", String.valueOf(result.getSolutionsFound()));
+        addMetricRow(grid, 3, "Calidad:", String.format("%.2f puntos", result.getQualityScore()));
+
+        card.getChildren().addAll(header, grid);
+        return card;
+    }
+
+    private void addMetricRow(GridPane grid, int row, String label, String value) {
+        Label labelNode = new Label(label);
+        labelNode.setFont(Font.font("Segoe UI", FontWeight.BOLD, 13));
+        labelNode.setStyle("-fx-text-fill: " + PRIMARY_COLOR + ";");
+
+        Label valueNode = new Label(value);
+        valueNode.setFont(Font.font("Segoe UI", 13));
+        valueNode.setStyle("-fx-text-fill: " + TEXT_COLOR + ";");
+
+        grid.add(labelNode, 0, row);
+        grid.add(valueNode, 1, row);
+    }
+
+    private VBox createComparisonCard(List<BenchmarkResult> results, AlgorithmBenchmark benchmark) {
+        VBox card = new VBox(10);
+        card.setPadding(new Insets(15));
+        card.setStyle(
+            "-fx-background-color: " + CARD_BG + ";" +
+            "-fx-background-radius: 10;" +
+            "-fx-border-color: " + PRIMARY_COLOR + ";" +
+            "-fx-border-width: 2;" +
+            "-fx-border-radius: 10;"
+        );
+
+        Label header = new Label("Comparación de Algoritmos");
+        header.setFont(Font.font("Segoe UI", FontWeight.BOLD, 18));
+        header.setStyle("-fx-text-fill: " + PRIMARY_COLOR + ";");
+
+        // Tabla de comparación
+        GridPane table = new GridPane();
+        table.setHgap(15);
+        table.setVgap(8);
+        table.setPadding(new Insets(10));
+
+        // Headers
+        String[] headers = {"Algoritmo", "Soluciones", "Tiempo", "Memoria", "Calidad"};
+        for (int i = 0; i < headers.length; i++) {
+            Label h = new Label(headers[i]);
+            h.setFont(Font.font("Segoe UI", FontWeight.BOLD, 12));
+            h.setStyle("-fx-text-fill: " + SECONDARY_COLOR + ";");
+            table.add(h, i, 0);
+        }
+
+        // Datos
+        for (int i = 0; i < results.size(); i++) {
+            BenchmarkResult r = results.get(i);
+            
+            Label algo = new Label(r.getAlgorithmType().getDisplayName());
+            algo.setStyle("-fx-text-fill: " + TEXT_COLOR + ";");
+            table.add(algo, 0, i + 1);
+
+            Label sols = new Label(String.valueOf(r.getSolutionsFound()));
+            sols.setStyle("-fx-text-fill: " + TEXT_COLOR + ";");
+            table.add(sols, 1, i + 1);
+
+            Label time = new Label(r.getExecutionTimeMs() + " ms");
+            time.setStyle("-fx-text-fill: " + TEXT_COLOR + ";");
+            table.add(time, 2, i + 1);
+
+            Label mem = new Label(String.format("%.2f MB", r.getMemoryUsedMB()));
+            mem.setStyle("-fx-text-fill: " + TEXT_COLOR + ";");
+            table.add(mem, 3, i + 1);
+
+            Label qual = new Label(String.format("%.2f", r.getQualityScore()));
+            qual.setStyle("-fx-text-fill: " + TEXT_COLOR + ";");
+            table.add(qual, 4, i + 1);
+        }
+
+        // Análisis
+        TextArea analysis = new TextArea(benchmark.generateComparisonReport(results));
+        analysis.setEditable(false);
+        analysis.setPrefRowCount(12);
+        analysis.setWrapText(true);
+        analysis.setStyle(
+            "-fx-control-inner-background: " + DARK_BG + ";" +
+            "-fx-text-fill: " + TEXT_COLOR + ";" +
+            "-fx-font-family: 'Consolas', 'Monaco', monospace;" +
+            "-fx-font-size: 11px;"
+        );
+
+        card.getChildren().addAll(header, table, new Separator(), analysis);
+        return card;
+    }
+
+    private VBox createChartsCard(List<BenchmarkResult> results) {
+        VBox card = new VBox(10);
+        card.setPadding(new Insets(15));
+        card.setStyle(
+            "-fx-background-color: " + CARD_BG + ";" +
+            "-fx-background-radius: 10;" +
+            "-fx-border-color: " + ACCENT_COLOR + ";" +
+            "-fx-border-width: 2;" +
+            "-fx-border-radius: 10;"
+        );
+
+        Label header = new Label("Comparativa");
+        header.setFont(Font.font("Segoe UI", FontWeight.BOLD, 16));
+        header.setStyle("-fx-text-fill: " + ACCENT_COLOR + ";");
+
+        // Gráficos de barras simples con caracteres
+        VBox charts = new VBox(15);
+        charts.setPadding(new Insets(10));
+
+        // Tiempo
+        charts.getChildren().add(createBarChart("Tiempo (ms)", results,
+            r -> (double) r.getExecutionTimeMs()));
+
+        // Memoria
+        charts.getChildren().add(createBarChart("Memoria (MB)", results,
+            r -> r.getMemoryUsedMB()));
+
+        // Calidad
+        charts.getChildren().add(createBarChart("Calidad", results,
+            BenchmarkResult::getQualityScore));
+
+        card.getChildren().addAll(header, charts);
+        return card;
+    }
+
+    private VBox createBarChart(String title, List<BenchmarkResult> results,
+                                java.util.function.Function<BenchmarkResult, Double> valueExtractor) {
+        VBox chart = new VBox(5);
+        
+        Label titleLabel = new Label(title);
+        titleLabel.setFont(Font.font("Segoe UI", FontWeight.BOLD, 13));
+        titleLabel.setStyle("-fx-text-fill: " + PRIMARY_COLOR + ";");
+        chart.getChildren().add(titleLabel);
+
+        double max = results.stream()
+            .mapToDouble(valueExtractor::apply)
+            .max()
+            .orElse(1.0);
+
+        for (BenchmarkResult r : results) {
+            HBox bar = new HBox(5);
+            bar.setAlignment(Pos.CENTER_LEFT);
+
+            Label name = new Label(r.getAlgorithmType().name().substring(0, 
+                Math.min(12, r.getAlgorithmType().name().length())));
+            name.setPrefWidth(120);
+            name.setStyle("-fx-text-fill: " + TEXT_COLOR + "; -fx-font-size: 11px;");
+
+            double value = valueExtractor.apply(r);
+            int barLength = (int) ((value / max) * 40);
+            
+            Label barLabel = new Label("█".repeat(Math.max(1, barLength)));
+            barLabel.setStyle("-fx-text-fill: " + PRIMARY_COLOR + ";");
+
+            Label valueLabel = new Label(String.format("%.2f", value));
+            valueLabel.setStyle("-fx-text-fill: " + TEXT_COLOR + "; -fx-font-size: 11px;");
+
+            bar.getChildren().addAll(name, barLabel, valueLabel);
+            chart.getChildren().add(bar);
+        }
+
+        return chart;
+    }
+
+    private VBox createScheduleCard(List<Course> schedule, int optionNumber) {
+        VBox card = new VBox(10);
+        card.setPadding(new Insets(15));
+        card.setStyle(
+            "-fx-background-color: " + CARD_BG + ";" +
+            "-fx-background-radius: 10;" +
+            "-fx-border-color: " + PRIMARY_COLOR + ";" +
+            "-fx-border-width: 2;" +
+            "-fx-border-radius: 10;"
+        );
+
+        Label header = new Label("Opción " + optionNumber);
+        header.setFont(Font.font("Segoe UI", FontWeight.BOLD, 16));
+        header.setStyle("-fx-text-fill: " + PRIMARY_COLOR + ";");
+
+        card.getChildren().add(header);
+
+        for (Course course : schedule) {
+            VBox courseBox = new VBox(5);
+            courseBox.setPadding(new Insets(8));
+            courseBox.setStyle(
+                "-fx-background-color: derive(" + CARD_BG + ", 10%);" +
+                "-fx-background-radius: 5;" +
+                "-fx-border-color: " + ACCENT_COLOR + ";" +
+                "-fx-border-width: 1;" +
+                "-fx-border-radius: 5;"
+            );
+
+            Label courseName = new Label(course.getSubject() + " - Grupo " + course.getGroup());
+            courseName.setFont(Font.font("Segoe UI", FontWeight.BOLD, 14));
+            courseName.setStyle("-fx-text-fill: " + SECONDARY_COLOR + ";");
+
+            courseBox.getChildren().add(courseName);
+
+            for (var timeSlot : course.getSchedules()) {
+                Label timeLabel = new Label("   🕐 " + timeSlot.toString());
+                timeLabel.setFont(Font.font("Segoe UI", 12));
+                timeLabel.setStyle("-fx-text-fill: " + TEXT_COLOR + ";");
+                courseBox.getChildren().add(timeLabel);
+            }
+
+            card.getChildren().add(courseBox);
+        }
+
+        return card;
+    }
+
+    private void clearSelection() {
+        subjectCheckBoxes.values().forEach(cb -> cb.setSelected(false));
+        resultsContainer.getChildren().clear();
+        
+        Label placeholder = new Label("Selecciona las materias y presiona 'Generar'");
+        placeholder.setFont(Font.font("Segoe UI", FontWeight.NORMAL, 14));
+        placeholder.setStyle("-fx-text-fill: " + TEXT_COLOR + "; -fx-opacity: 0.6;");
+        resultsContainer.getChildren().add(placeholder);
+        
+        statusLabel.setText("");
+    }
+
+    private void showError(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+}
