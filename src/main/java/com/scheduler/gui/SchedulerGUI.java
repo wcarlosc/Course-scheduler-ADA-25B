@@ -96,11 +96,11 @@ public class SchedulerGUI extends Application {
         header.setAlignment(Pos.CENTER);
         header.setStyle("-fx-background-color: linear-gradient(to right, " + PRIMARY_COLOR + ", " + SECONDARY_COLOR + ");");
 
-        Label title = new Label("🎓 Sistema de generacion de Horarios");
+        Label title = new Label("🎓 Horarios EPIS 26A");
         title.setFont(Font.font("Segoe UI", FontWeight.BOLD, 28));
         title.setStyle("-fx-text-fill: " + TEXT_COLOR + ";");
 
-        Label version = new Label("v1.0 - by xxas");
+        Label version = new Label("v1.1 - XXAS");
         version.setFont(Font.font("Segoe UI", FontWeight.NORMAL, 12));
         version.setStyle("-fx-text-fill: " + TEXT_COLOR + "; -fx-opacity: 0.7;");
 
@@ -145,10 +145,13 @@ public class SchedulerGUI extends Application {
         // Selector de cantidad de soluciones
         Label limitLabel = new Label("Máx. soluciones:");
         limitLabel.setFont(Font.font("Segoe UI", FontWeight.BOLD, 14));
-        limitLabel.setStyle("-fx-text-fill: " + TEXT_COLOR + ";");
+        limitLabel.setStyle(
+            "-fx-text-fill: " + TEXT_COLOR + ";" +
+            "-fx-padding: 5 0 0 0;"
+        );
 
         maxSolutionsSpinner = new Spinner<>();
-        maxSolutionsSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, 5));
+        maxSolutionsSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 30000, 10));
         maxSolutionsSpinner.setEditable(true);
         maxSolutionsSpinner.setPrefWidth(320);
 
@@ -296,7 +299,6 @@ public class SchedulerGUI extends Application {
         button.setStyle(
             "-fx-background-color: " + color + ";" +
             "-fx-text-fill: white;" +
-            "-fx-background-radius: 8;" +
             "-fx-cursor: hand;" +
             "-fx-padding: 10 20;"
         );
@@ -561,7 +563,7 @@ public class SchedulerGUI extends Application {
         double max = results.stream()
             .mapToDouble(valueExtractor::apply)
             .max()
-            .orElse(1.0);
+            .orElse(1.1);
 
         for (BenchmarkResult r : results) {
             HBox bar = new HBox(5);
@@ -726,21 +728,14 @@ public class SchedulerGUI extends Application {
                 if (y < headerHeight) y = headerHeight;
                 if (y + height > totalHeight) height = totalHeight - y;
 
-                // Rectángulo del curso con sombra
-                Rectangle shadow = new Rectangle(x + 2, y + 2, colWidth - 6, height);
-                shadow.setFill(javafx.scene.paint.Color.web("#000000"));
-                shadow.setOpacity(0.3);
-                shadow.setArcWidth(8);
-                shadow.setArcHeight(8);
-                pane.getChildren().add(shadow);
 
                 Rectangle rect = new Rectangle(x, y, colWidth - 6, height);
                 rect.setFill(javafx.scene.paint.Color.web(color));
-                rect.setArcWidth(8);
-                rect.setArcHeight(8);
+                rect.setArcWidth(3);
+                rect.setArcHeight(3);
                 rect.setOpacity(0.9);
-                rect.setStroke(javafx.scene.paint.Color.web("#ffffff"));
-                rect.setStrokeWidth(1.5);
+                rect.setStroke(javafx.scene.paint.Color.web("#dbdbdbff"));
+                rect.setStrokeWidth(2);
                 pane.getChildren().add(rect);
 
                 // Etiqueta del curso
@@ -808,7 +803,6 @@ public class SchedulerGUI extends Application {
             case "miércoles": return 2;
             case "jueves": return 3;
             case "viernes": return 4;
-            case "sabado": return 5;
             default: return -1;
         }
     }
