@@ -22,7 +22,7 @@ public class Scheduler {
      * @return lista de todas las combinaciones de horarios sin conflictos
      */
     public List<List<Course>> generateSchedules(List<String> desiredSubjects) {
-        return generateSchedules(desiredSubjects, PriorityType.NONE);
+        return generateSchedules(desiredSubjects, PriorityType.FEWER_DAYS);
     }
 
     /**

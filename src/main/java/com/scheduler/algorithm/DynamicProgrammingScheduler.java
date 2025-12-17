@@ -31,7 +31,7 @@ public class DynamicProgrammingScheduler {
     }
 
     public List<List<Course>> generateSchedules(List<String> desiredSubjects) {
-        return generateSchedules(desiredSubjects, PriorityType.NONE);
+        return generateSchedules(desiredSubjects, PriorityType.FEWER_DAYS);
     }
 
     public List<List<Course>> generateSchedules(List<String> desiredSubjects, PriorityType priority) {

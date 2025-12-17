@@ -1,7 +1,6 @@
 package com.scheduler.logic;
 
 public enum PriorityType {
-    NONE("Priorizar grupos A de Teoría"),
     FEWER_DAYS("Menos días de clase"),
     LESS_GAPS("Menos espacios entre cursos");
 

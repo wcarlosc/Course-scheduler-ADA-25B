@@ -1,7 +1,7 @@
 package com.scheduler.algorithm;
 
 public enum AlgorithmType {
-    BACKTRACKING("Backtracking (NP - Completo)", "Búsqueda exhaustiva con retroceso"),
+    BACKTRACKING("Backtracking", "Búsqueda exhaustiva con retroceso"),
     DIVIDE_CONQUER("Divide y Conquista", "División recursiva del problema"),
     GREEDY("Algoritmo Goloso", "Selección por heurística local"),
     DYNAMIC_PROGRAMMING("Programación Dinámica", "Optimización con memorización");

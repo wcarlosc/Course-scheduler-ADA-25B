@@ -75,29 +75,25 @@ public class Main {
         // 3. Seleccionar tipo de priorización
         System.out.println("\n" + "─".repeat(55));
         System.out.println("Seleccione el tipo de priorización:");
-        System.out.println("  1. Sin priorización (mostrar todos)");
-        System.out.println("  2. Priorizar menos días de clase");
-        System.out.println("  3. Priorizar menos espacios entre cursos");
+        System.out.println("  1. Priorizar menos días de clase");
+        System.out.println("  2. Priorizar menos espacios entre cursos");
         System.out.print("> ");
         
         String priorityInput = scanner.nextLine().trim();
-        PriorityType priority = PriorityType.NONE;
+        PriorityType priority = PriorityType.FEWER_DAYS;
         
         switch (priorityInput) {
             case "1":
-                priority = PriorityType.NONE;
-                break;
-            case "2":
                 priority = PriorityType.FEWER_DAYS;
                 System.out.println("✓ Priorizando horarios con menos días de clase");
                 break;
-            case "3":
+            case "2":
                 priority = PriorityType.LESS_GAPS;
                 System.out.println("✓ Priorizando horarios con menos espacios entre cursos");
                 break;
             default:
-                System.out.println("Opción no válida, usando sin priorización");
-                priority = PriorityType.NONE;
+                System.out.println("Opción no válida, usando priorización por menos días");
+                priority = PriorityType.FEWER_DAYS;
         }
 
         // 4. Ejecutar el algoritmo de planificación
@@ -126,7 +122,6 @@ public class Main {
                 for (Course c : schedule) {
                     System.out.println("   " + c);
                 }
-                System.out.println(ScheduleEvaluator.getScheduleMetrics(schedule));
                 System.out.println();
             }
         }

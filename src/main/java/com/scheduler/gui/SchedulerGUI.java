@@ -45,7 +45,8 @@ public class SchedulerGUI extends Application {
     private VBox subjectsContainer;
     private VBox resultsContainer;
     private Label statusLabel;
-    private Map<String, CheckBox> subjectCheckBoxes;
+    private Map<String, CheckBox> subjectCheckBoxes; // Checkbox por materia (para seleccionar todos)
+    private Map<String, CheckBox> groupCheckBoxes; // Checkbox por grupo individual
     private ComboBox<AlgorithmType> algorithmSelector;
     private CheckBox compareAllCheckbox;
     private Spinner<Integer> maxSolutionsSpinner;
@@ -87,7 +88,7 @@ public class SchedulerGUI extends Application {
         root.setCenter(rightPanel);
 
         // Escena
-        Scene scene = new Scene(root, 1200, 700);
+        Scene scene = new Scene(root, 1400, 900);
         primaryStage.setTitle("Sistema de generacion de Horarios");
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -114,7 +115,7 @@ public class SchedulerGUI extends Application {
     private VBox createLeftPanel() {
         VBox panel = new VBox(15);
         panel.setPadding(new Insets(20));
-        panel.setPrefWidth(500);
+        panel.setPrefWidth(540);
         panel.setStyle("-fx-background-color: " + CARD_BG + ";");
 
         // Título
@@ -168,7 +169,7 @@ public class SchedulerGUI extends Application {
 
         prioritySelector = new ComboBox<>();
         prioritySelector.getItems().addAll(PriorityType.values());
-        prioritySelector.setValue(PriorityType.NONE);
+        prioritySelector.setValue(PriorityType.FEWER_DAYS);
         prioritySelector.setPrefWidth(320);
         prioritySelector.setStyle(
             "-fx-background-color: " + TEXT_COLOR  + ";" +
@@ -188,6 +189,7 @@ public class SchedulerGUI extends Application {
         subjectsContainer.setPadding(new Insets(10, 0, 0, 0));
         
         subjectCheckBoxes = new HashMap<>();
+        groupCheckBoxes = new HashMap<>();
         
         // Organizar cursos por año
         Map<Integer, List<Course>> coursesByYear = allCourses.stream()
@@ -205,12 +207,13 @@ public class SchedulerGUI extends Application {
                 subjectsContainer.getChildren().add(yearLabel);
                 
                 // Obtener materias únicas para este año
-                List<String> subjectsInYear = coursesInYear.stream()
-                        .map(Course::getSubject)
-                        .distinct()
-                        .sorted()
-                        .collect(Collectors.toList());
+                Map<String, List<Course>> subjectsMap = coursesInYear.stream()
+                        .collect(Collectors.groupingBy(Course::getSubject));
                 
+                List<String> subjectsInYear = new java.util.ArrayList<>(subjectsMap.keySet());
+                subjectsInYear.sort(String::compareTo);
+                
+                // GridPane para organizar en 2 columnas
                 GridPane yearBox = new GridPane();
                 yearBox.setHgap(10);
                 yearBox.setVgap(8);
@@ -220,31 +223,98 @@ public class SchedulerGUI extends Application {
                 int col = 0;
                 
                 for (String subject : subjectsInYear) {
-                    long groupCount = coursesInYear.stream()
-                            .filter(c -> c.getSubject().equals(subject))
-                            .count();
-
-                    CheckBox checkBox = new CheckBox(subject + " (" + groupCount + " grupos)");
-                    checkBox.setFont(Font.font("Segoe UI", 13));
-                    checkBox.setWrapText(true);
-                    checkBox.setMaxWidth(220);
-                    checkBox.setStyle(
-                        "-fx-text-fill: " + TEXT_COLOR + ";" +
-                        "-fx-cursor: hand;"
+                    List<Course> groups = subjectsMap.get(subject);
+                    
+                    // VBox para cada materia (checkbox + grupos colapsables)
+                    VBox subjectBox = new VBox(5);
+                    subjectBox.setMaxWidth(220);
+                    
+                    // HBox para el checkbox y el botón de expandir
+                    HBox headerBox = new HBox(5);
+                    headerBox.setAlignment(Pos.CENTER_LEFT);
+                    
+                    // Checkbox principal de la materia
+                    CheckBox subjectCheckBox = new CheckBox(subject + " (" + groups.size() + ")");
+                    subjectCheckBox.setFont(Font.font("Segoe UI", 13));
+                    subjectCheckBox.setWrapText(true);
+                    subjectCheckBox.setStyle("-fx-text-fill: " + TEXT_COLOR + "; -fx-cursor: hand;");
+                    
+                    // Botón para expandir/colapsar 
+                    Label expandBtn = new Label("▶");
+                    expandBtn.setFont(Font.font("Segoe UI", 20));
+                    expandBtn.setStyle("-fx-text-fill: " + ACCENT_COLOR + "; -fx-cursor: hand;");
+                    expandBtn.setPadding(new Insets(0, 5, 0, 0));
+                    
+                    headerBox.getChildren().addAll(expandBtn, subjectCheckBox);
+                    
+                    // Contenedor de grupos (inicialmente oculto)
+                    VBox groupsBox = new VBox(3);
+                    groupsBox.setPadding(new Insets(0, 0, 0, 20));
+                    groupsBox.setVisible(false);
+                    groupsBox.setManaged(false);
+                    
+                    // Crear checkbox para cada grupo
+                    for (Course course : groups) {
+                        String groupKey = course.getId();
+                        
+                        // Construir texto descriptivo del grupo
+                        StringBuilder scheduleInfo = new StringBuilder();
+                        for (var slot : course.getSchedules()) {
+                            if (scheduleInfo.length() > 0) scheduleInfo.append(", ");
+                            scheduleInfo.append(slot.getDay().substring(0, 3)).append(" ")
+                                       .append(formatTime(slot.getStart())).append("-")
+                                       .append(formatTime(slot.getEnd()));
+                        }
+                        
+                        CheckBox groupCheckBox = new CheckBox( course.getGroup() + ": " + scheduleInfo);
+                        groupCheckBox.setFont(Font.font("Segoe UI", 12));
+                        groupCheckBox.setStyle("-fx-text-fill: #f1f1f1ff; -fx-cursor: hand;");
+                        groupCheckBox.setWrapText(true);
+                        groupCheckBox.setMaxWidth(200);
+                        
+                        groupCheckBox.setOnMouseEntered(e -> 
+                            groupCheckBox.setStyle("-fx-text-fill: " + PRIMARY_COLOR + "; -fx-cursor: hand;")
+                        );
+                        groupCheckBox.setOnMouseExited(e -> 
+                            groupCheckBox.setStyle("-fx-text-fill: #fffefeff; -fx-cursor: hand;")
+                        );
+                        
+                        groupCheckBoxes.put(groupKey, groupCheckBox);
+                        groupsBox.getChildren().add(groupCheckBox);
+                    }
+                    
+                    // Acción del checkbox principal: seleccionar/deseleccionar todos los grupos
+                    subjectCheckBox.setOnAction(e -> {
+                        boolean selected = subjectCheckBox.isSelected();
+                        for (Course course : groups) {
+                            CheckBox cb = groupCheckBoxes.get(course.getId());
+                            if (cb != null) cb.setSelected(selected);
+                        }
+                    });
+                    
+                    // Hover effects para el checkbox de materia
+                    subjectCheckBox.setOnMouseEntered(e -> 
+                        subjectCheckBox.setStyle("-fx-text-fill: " + ACCENT_COLOR + "; -fx-cursor: hand;")
+                    );
+                    subjectCheckBox.setOnMouseExited(e -> 
+                        subjectCheckBox.setStyle("-fx-text-fill: " + TEXT_COLOR + "; -fx-cursor: hand;")
                     );
                     
-                    // Estilo personalizado para el checkbox
-                    checkBox.setOnMouseEntered(e -> 
-                        checkBox.setStyle("-fx-text-fill: " + ACCENT_COLOR + "; -fx-cursor: hand;")
-                    );
-                    checkBox.setOnMouseExited(e -> 
-                        checkBox.setStyle("-fx-text-fill: " + TEXT_COLOR + "; -fx-cursor: hand;")
-                    );
-
-                    subjectCheckBoxes.put(subject, checkBox);
-                    yearBox.add(checkBox, col, row);
+                    // Acción del botón de expandir/colapsar
+                    expandBtn.setOnMouseClicked(e -> {
+                        boolean isVisible = groupsBox.isVisible();
+                        groupsBox.setVisible(!isVisible);
+                        groupsBox.setManaged(!isVisible);
+                        expandBtn.setFont(Font.font("Segoe UI", 20));
+                        expandBtn.setText(isVisible ? "▶" : "▶");
+                    });
                     
-                    // Alternar entre columnas
+                    subjectCheckBoxes.put(subject, subjectCheckBox);
+                    subjectBox.getChildren().addAll(headerBox, groupsBox);
+                    
+                    // Agregar al grid en 2 columnas
+                    yearBox.add(subjectBox, col, row);
+                    
                     col++;
                     if (col >= 2) {
                         col = 0;
@@ -328,44 +398,70 @@ public class SchedulerGUI extends Application {
     }
 
     private void generateSchedules() {
-        List<String> selectedSubjects = subjectCheckBoxes.entrySet().stream()
+        // Obtener los grupos seleccionados
+        List<Course> selectedGroups = groupCheckBoxes.entrySet().stream()
                 .filter(entry -> entry.getValue().isSelected())
-                .map(Map.Entry::getKey)
+                .map(entry -> {
+                    String courseId = entry.getKey();
+                    return allCourses.stream()
+                            .filter(c -> c.getId().equals(courseId))
+                            .findFirst()
+                            .orElse(null);
+                })
+                .filter(c -> c != null)
                 .collect(Collectors.toList());
 
-        if (selectedSubjects.isEmpty()) {
-            statusLabel.setText(" Selecciona al menos una materia");
+        if (selectedGroups.isEmpty()) {
+            statusLabel.setText("Selecciona al menos un grupo");
             statusLabel.setStyle("-fx-text-fill: " + SECONDARY_COLOR + ";");
             return;
         }
 
+        // Verificar que hay al menos un grupo por materia seleccionada
+        Map<String, List<Course>> groupsBySubject = selectedGroups.stream()
+                .collect(Collectors.groupingBy(Course::getSubject));
+
         if (compareAllCheckbox.isSelected()) {
-            runComparison(selectedSubjects);
+            runComparison(selectedGroups, groupsBySubject);
         } else {
-            runSingleAlgorithm(selectedSubjects);
+            runSingleAlgorithm(selectedGroups, groupsBySubject);
         }
     }
 
-    private void runSingleAlgorithm(List<String> selectedSubjects) {
+    private void runSingleAlgorithm(List<Course> selectedGroups, Map<String, List<Course>> groupsBySubject) {
         statusLabel.setText(" Generando horarios...");
         statusLabel.setStyle("-fx-text-fill: " + PRIMARY_COLOR + ";");
 
-        AlgorithmBenchmark benchmark = new AlgorithmBenchmark(allCourses);
+        AlgorithmBenchmark benchmark = new AlgorithmBenchmark(selectedGroups);
         PriorityType priority = prioritySelector.getValue();
-        BenchmarkResult result = benchmark.runBenchmark(algorithmSelector.getValue(), selectedSubjects, priority);
+        
+        // Obtener las materias únicas
+        List<String> subjects = new java.util.ArrayList<>(groupsBySubject.keySet());
+        
+        BenchmarkResult result = benchmark.runBenchmark(algorithmSelector.getValue(), subjects, priority);
 
         displaySingleResult(result);
     }
 
-    private void runComparison(List<String> selectedSubjects) {
+    private void runComparison(List<Course> selectedGroups, Map<String, List<Course>> groupsBySubject) {
         statusLabel.setText(" Comparando algoritmos...");
         statusLabel.setStyle("-fx-text-fill: " + PRIMARY_COLOR + ";");
 
-        AlgorithmBenchmark benchmark = new AlgorithmBenchmark(allCourses);
+        AlgorithmBenchmark benchmark = new AlgorithmBenchmark(selectedGroups);
         PriorityType priority = prioritySelector.getValue();
-        List<BenchmarkResult> results = benchmark.runAllBenchmarks(selectedSubjects, priority);
+        
+        // Obtener las materias únicas
+        List<String> subjects = new java.util.ArrayList<>(groupsBySubject.keySet());
+        
+        List<BenchmarkResult> results = benchmark.runAllBenchmarks(subjects, priority);
 
         displayComparisonResults(results, benchmark);
+    }
+    
+    private String formatTime(int minutes) {
+        int hours = minutes / 60;
+        int mins = minutes % 60;
+        return String.format("%d:%02d", hours, mins);
     }
 
     private void displaySingleResult(BenchmarkResult result) {
@@ -726,7 +822,7 @@ public class SchedulerGUI extends Application {
 
         // Asignar colores a materias
         Map<String, String> subjectColors = new HashMap<>();
-        String[] palette = {"#FF6B6B", "#4ECDC4", "#45B7D1", "#FFA07A", "#98D8C8", "#F7DC6F", "#BB8FCE", "#85C1E2"};
+        String[] palette = {"#9c5d5dff", "#4ECDC4", "#45B7D1", "#FFA07A", "#769e66ff", "#3a3f6eff", "#BB8FCE", "#85C1E2"};
         
         int idx = 0;
         for (Course course : schedule) {
@@ -763,9 +859,6 @@ public class SchedulerGUI extends Application {
 
                 // Etiqueta del curso
                 String courseName = course.getSubject();
-                if (courseName.length() > 25) {
-                    courseName = courseName.substring(0, 22) + "...";
-                }
                 
                 Label lbl = new Label(courseName + "\nGrupo " + course.getGroup());
                 lbl.setFont(Font.font("Segoe UI", FontWeight.BOLD, 9));
@@ -791,13 +884,6 @@ public class SchedulerGUI extends Application {
         title.setFont(Font.font("Segoe UI", FontWeight.BOLD, 14));
         title.setStyle("-fx-text-fill: " + SECONDARY_COLOR + ";");
         box.getChildren().add(title);
-        
-        // Agregar métricas del horario
-        Label metrics = new Label(ScheduleEvaluator.getScheduleMetrics(schedule));
-        metrics.setFont(Font.font("Segoe UI", 11));
-        metrics.setStyle("-fx-text-fill: " + ACCENT_COLOR + ";");
-        metrics.setWrapText(true);
-        box.getChildren().add(metrics);
         
         Separator metricsSep = new Separator();
         metricsSep.setStyle("-fx-background-color: #555;");
@@ -843,6 +929,7 @@ public class SchedulerGUI extends Application {
 
     private void clearSelection() {
         subjectCheckBoxes.values().forEach(cb -> cb.setSelected(false));
+        groupCheckBoxes.values().forEach(cb -> cb.setSelected(false));
         resultsContainer.getChildren().clear();
         
         Label placeholder = new Label("Presiona Generar para ver los horarios");

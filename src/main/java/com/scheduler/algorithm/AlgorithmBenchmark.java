@@ -17,7 +17,7 @@ public class AlgorithmBenchmark {
 
     
     public BenchmarkResult runBenchmark(AlgorithmType algorithmType, List<String> desiredSubjects) {
-        return runBenchmark(algorithmType, desiredSubjects, PriorityType.NONE);
+        return runBenchmark(algorithmType, desiredSubjects, PriorityType.FEWER_DAYS);
     }
 
     public BenchmarkResult runBenchmark(AlgorithmType algorithmType, List<String> desiredSubjects, PriorityType priority) {
@@ -64,7 +64,7 @@ public class AlgorithmBenchmark {
      * Ejecuta benchmark para todos los algoritmos
      */
     public List<BenchmarkResult> runAllBenchmarks(List<String> desiredSubjects) {
-        return runAllBenchmarks(desiredSubjects, PriorityType.NONE);
+        return runAllBenchmarks(desiredSubjects, PriorityType.FEWER_DAYS);
     }
 
     public List<BenchmarkResult> runAllBenchmarks(List<String> desiredSubjects, PriorityType priority) {
