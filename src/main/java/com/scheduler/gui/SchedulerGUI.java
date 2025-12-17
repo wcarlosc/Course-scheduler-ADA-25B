@@ -100,11 +100,11 @@ public class SchedulerGUI extends Application {
         title.setFont(Font.font("Segoe UI", FontWeight.BOLD, 28));
         title.setStyle("-fx-text-fill: " + TEXT_COLOR + ";");
 
-        // Label subtitle = new Label("Comparación de Algoritmos");
-        // subtitle.setFont(Font.font("Segoe UI", FontWeight.NORMAL, 14));
-        // subtitle.setStyle("-fx-text-fill: " + TEXT_COLOR + "; -fx-opacity: 0.9;");
+        Label version = new Label("v1.0 - by xxas");
+        version.setFont(Font.font("Segoe UI", FontWeight.NORMAL, 12));
+        version.setStyle("-fx-text-fill: " + TEXT_COLOR + "; -fx-opacity: 0.7;");
 
-        header.getChildren().addAll(title);
+        header.getChildren().addAll(title, version);
         return header;
     }
 
