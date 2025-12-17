@@ -179,8 +179,8 @@
     ]
   },
   {
-    "id": "ING-A",
-    "subject": "Ingles",
+    "id": "ING-A24",
+    "subject": "Ingles Nueva Malla",
     "group": "A",
     "year": 2,
     "schedules": [
@@ -244,8 +244,8 @@
     ]
   },
   {
-    "id": "ING-B",
-    "subject": "Ingles",
+    "id": "ING-B24",
+    "subject": "Ingles Nueva Malla",
     "group": "B",
     "year": 2,
     "schedules": [
