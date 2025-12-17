@@ -625,7 +625,7 @@ public class SchedulerGUI extends Application {
         double endHour = 22; // 10:00 PM
         double pxPerMin = 0.7; // Escala vertical mejorada
         double totalHeight = headerHeight + ((endHour - startHour + 1) * 60 * pxPerMin);
-        double totalWidth = timeColWidth + (colWidth * 6);
+        double totalWidth = timeColWidth + (colWidth * 5);
         
         pane.setPrefSize(totalWidth, totalHeight); 
         pane.setMinSize(totalWidth, totalHeight);
@@ -642,7 +642,7 @@ public class SchedulerGUI extends Application {
         pane.getChildren().add(headerBg);
 
         // Etiquetas de días
-        String[] days = {"LUN", "MAR", "MIÉ", "JUE", "VIE", "SÁB"};
+        String[] days = {"LUN", "MAR", "MIÉ", "JUE", "VIE"};
         for (int i = 0; i < days.length; i++) {
             Label dayLabel = new Label(days[i]);
             dayLabel.setFont(Font.font("Segoe UI", FontWeight.BOLD, 12));
@@ -809,7 +809,6 @@ public class SchedulerGUI extends Application {
             case "jueves": return 3;
             case "viernes": return 4;
             case "sabado": return 5;
-            case "sábado": return 5;
             default: return -1;
         }
     }
