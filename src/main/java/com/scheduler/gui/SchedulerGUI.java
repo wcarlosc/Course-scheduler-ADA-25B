@@ -105,7 +105,7 @@ public class SchedulerGUI extends Application {
     private VBox createLeftPanel() {
         VBox panel = new VBox(15);
         panel.setPadding(new Insets(20));
-        panel.setPrefWidth(380);
+        panel.setPrefWidth(500);
         panel.setStyle("-fx-background-color: " + CARD_BG + ";");
 
         // Título
@@ -171,8 +171,13 @@ public class SchedulerGUI extends Application {
                         .sorted()
                         .collect(Collectors.toList());
                 
-                VBox yearBox = new VBox(8);
+                GridPane yearBox = new GridPane();
+                yearBox.setHgap(10);
+                yearBox.setVgap(8);
                 yearBox.setPadding(new Insets(5, 0, 10, 15));
+                
+                int row = 0;
+                int col = 0;
                 
                 for (String subject : subjectsInYear) {
                     long groupCount = coursesInYear.stream()
@@ -181,6 +186,8 @@ public class SchedulerGUI extends Application {
 
                     CheckBox checkBox = new CheckBox(subject + " (" + groupCount + " grupos)");
                     checkBox.setFont(Font.font("Segoe UI", 13));
+                    checkBox.setWrapText(true);
+                    checkBox.setMaxWidth(220);
                     checkBox.setStyle(
                         "-fx-text-fill: " + TEXT_COLOR + ";" +
                         "-fx-cursor: hand;"
@@ -195,7 +202,14 @@ public class SchedulerGUI extends Application {
                     );
 
                     subjectCheckBoxes.put(subject, checkBox);
-                    yearBox.getChildren().add(checkBox);
+                    yearBox.add(checkBox, col, row);
+                    
+                    // Alternar entre columnas
+                    col++;
+                    if (col >= 2) {
+                        col = 0;
+                        row++;
+                    }
                 }
                 
                 subjectsContainer.getChildren().add(yearBox);
