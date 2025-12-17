@@ -49,12 +49,12 @@ public class SchedulerGUI extends Application {
     private Spinner<Integer> maxSolutionsSpinner;
 
     // Colores
-    private static final String PRIMARY_COLOR = "#FF6B35"; // Naranja
-    private static final String SECONDARY_COLOR = "#F7931E"; // Naranja claro
-    private static final String DARK_BG = "#1a1a1a"; // Negro oscuro
-    private static final String CARD_BG = "#2d2d2d"; // Gris oscuro
-    private static final String TEXT_COLOR = "#ffffff"; // Blanco
-    private static final String ACCENT_COLOR = "#ff8c5a"; // Naranja suave
+    private static final String PRIMARY_COLOR = "#FF6B35"; 
+    private static final String SECONDARY_COLOR = "#F7931E"; 
+    private static final String DARK_BG = "#1a1a1a"; 
+    private static final String CARD_BG = "#2d2d2d"; 
+    private static final String TEXT_COLOR = "#ffffff"; 
+    private static final String ACCENT_COLOR = "#ff8c5a"; 
 
     @Override
     public void start(Stage primaryStage) {
@@ -300,10 +300,6 @@ public class SchedulerGUI extends Application {
             "-fx-cursor: hand;" +
             "-fx-padding: 10 20;"
         );
-
-        
-
-        
 
         return button;
     }
