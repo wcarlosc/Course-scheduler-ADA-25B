@@ -22,6 +22,8 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Separator;
+import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -41,6 +43,7 @@ public class SchedulerGUI extends Application {
     private Map<String, CheckBox> subjectCheckBoxes;
     private ComboBox<AlgorithmType> algorithmSelector;
     private CheckBox compareAllCheckbox;
+    private Spinner<Integer> maxSolutionsSpinner;
 
     // Colores
     private static final String PRIMARY_COLOR = "#FF6B35"; // Naranja
@@ -133,7 +136,18 @@ public class SchedulerGUI extends Application {
         compareAllCheckbox.setStyle("-fx-text-fill: " + ACCENT_COLOR + ";");
         compareAllCheckbox.setOnAction(e -> {
             algorithmSelector.setDisable(compareAllCheckbox.isSelected());
+            maxSolutionsSpinner.setDisable(compareAllCheckbox.isSelected());
         });
+
+        // Selector de cantidad de soluciones
+        Label limitLabel = new Label("Máx. soluciones:");
+        limitLabel.setFont(Font.font("Segoe UI", FontWeight.BOLD, 14));
+        limitLabel.setStyle("-fx-text-fill: " + TEXT_COLOR + ";");
+
+        maxSolutionsSpinner = new Spinner<>();
+        maxSolutionsSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, 5));
+        maxSolutionsSpinner.setEditable(true);
+        maxSolutionsSpinner.setPrefWidth(320);
 
         Separator sep1 = new Separator();
         sep1.setStyle("-fx-background-color: " + PRIMARY_COLOR + ";");
@@ -240,6 +254,7 @@ public class SchedulerGUI extends Application {
         statusLabel.setWrapText(true);
 
         panel.getChildren().addAll(title, algoLabel, algorithmSelector, compareAllCheckbox, 
+                                   limitLabel, maxSolutionsSpinner,
                                    sep1, subjectsTitle, scrollPane, buttons, statusLabel);
         return panel;
     }
@@ -356,9 +371,19 @@ public class SchedulerGUI extends Application {
         resultsContainer.getChildren().add(metricsCard);
 
         // Mostrar horarios
-        for (int i = 0; i < result.getSolutions().size(); i++) {
+        int maxSolutions = maxSolutionsSpinner.getValue();
+        int limit = Math.min(result.getSolutions().size(), maxSolutions);
+
+        for (int i = 0; i < limit; i++) {
             VBox scheduleCard = createScheduleCard(result.getSolutions().get(i), i + 1);
             resultsContainer.getChildren().add(scheduleCard);
+        }
+
+        if (result.getSolutions().size() > limit) {
+             Label moreLabel = new Label("... y " + (result.getSolutions().size() - limit) + " soluciones más.");
+             moreLabel.setFont(Font.font("Segoe UI", 14));
+             moreLabel.setStyle("-fx-text-fill: " + TEXT_COLOR + "; -fx-padding: 10;");
+             resultsContainer.getChildren().add(moreLabel);
         }
     }
 

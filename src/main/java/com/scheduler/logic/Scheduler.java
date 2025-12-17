@@ -7,17 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-/**
- * Planificador de horarios usando algoritmo de Backtracking (NP)
- * 
- * El problema de planificación de horarios es un problema NP-completo.
- * Se utiliza backtracking para explorar todas las combinaciones posibles
- * de grupos para las materias seleccionadas, descartando aquellas que
- * tienen conflictos de horario.
- * 
- * Complejidad: O(k^n) donde n es el número de materias y k es el promedio
- * de grupos por materia.
- */
+
 public class Scheduler {
 
     private List<Course> allCourses;
