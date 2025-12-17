@@ -4,6 +4,7 @@
     "id": "IDSW-A",
     "subject": "Introduccion al Desarrollo de Software",
     "group": "A",
+    "year": 1,
     "schedules": [
       { "day": "Lunes", "start": 420, "end": 520 },
       { "day": "Lunes", "start": 840, "end": 940 }
@@ -13,6 +14,7 @@
     "id": "IDSW-B",
     "subject": "Introduccion al Desarrollo de Software",
     "group": "B",
+    "year": 1,
     "schedules": [
       { "day": "Lunes", "start": 840, "end": 940 },
       { "day": "Martes", "start": 840, "end": 940 },
@@ -23,6 +25,7 @@
     "id": "MAT-A",
     "subject": "Matematica Basica",
     "group": "A",
+    "year": 1,
     "schedules": [
       { "day": "Martes", "start": 470, "end": 580 },
       { "day": "Jueves", "start": 420, "end": 520 }
@@ -32,6 +35,7 @@
     "id": "MAT-B",
     "subject": "Matematica Basica",
     "group": "B",
+    "year": 1,
     "schedules": [
       { "day": "Viernes", "start": 1000, "end": 1110 },
       { "day": "Jueves", "start": 1110, "end": 1210 }
@@ -41,6 +45,7 @@
     "id": "MAT-C",
     "subject": "Matematica Basica",
     "group": "C",
+    "year": 1,
     "schedules": [
       { "day": "Miercoles", "start": 840, "end": 940 },
       { "day": "Viernes", "start": 840, "end": 890 }
@@ -50,6 +55,7 @@
     "id": "ALG-A",
     "subject": "Algebra Lineal",
     "group": "A",
+    "year": 1,
     "schedules": [
       { "day": "Lunes", "start": 580, "end": 690 },
       { "day": "Miercoles", "start": 420, "end": 580 }
@@ -59,6 +65,7 @@
     "id": "ALG-B",
     "subject": "Algebra Lineal",
     "group": "B",
+    "year": 1,
     "schedules": [
       { "day": "Lunes", "start": 1110, "end": 1210 },
       { "day": "Martes", "start": 1110, "end": 1210 }
@@ -68,6 +75,7 @@
     "id": "MTA-A",
     "subject": "Metodologia de Trabajo Academico",
     "group": "A",
+    "year": 1,
     "schedules": [
       { "day": "Martes", "start": 580, "end": 690 },
       { "day": "Viernes", "start": 580, "end": 690 }
@@ -77,6 +85,7 @@
     "id": "MTA-B",
     "subject": "Metodologia de Trabajo Academico",
     "group": "B",
+    "year": 1,
     "schedules": [
       { "day": "Miercoles", "start": 1110, "end": 1210 },
       { "day": "Viernes", "start": 1110, "end": 1210 }
@@ -86,6 +95,7 @@
     "id": "ED-A",
     "subject": "Estructuras Discrtas I",
     "group": "A",
+    "year": 1,
     "schedules": [
       { "day": "Miercoles", "start": 580, "end": 690 },
       { "day": "Jueves", "start": 580, "end": 690 }
@@ -95,6 +105,7 @@
     "id": "ED-B",
     "subject": "Estructuras Discrtas I",
     "group": "B",
+    "year": 1,
     "schedules": [
       { "day": "Lunes", "start": 1000, "end": 1110 },
       { "day": "Miercoles", "start": 950, "end": 1060 }
@@ -104,6 +115,7 @@
     "id": "ING-A",
     "subject": "Introduccion a la Ingenieria",
     "group": "A",
+    "year": 1,
     "schedules": [
       { "day": "Lunes", "start": 690, "end": 790 },
       { "day": "Miercoles", "start": 690, "end": 790 }
@@ -113,6 +125,7 @@
     "id": "ING-B",
     "subject": "Introduccion a la Ingenieria",
     "group": "B",
+    "year": 1,
     "schedules": [
       { "day": "Martes", "start": 950, "end": 1060 },
       { "day": "Jueves", "start": 1000, "end": 1110 }
@@ -122,6 +135,7 @@
     "id": "RHET-A",
     "subject": "Relaciones Humanas en Empresas de Desarrollo de Software y Base Tecnologica",
     "group": "A",
+    "year": 1,
     "schedules": [
       { "day": "Viernes", "start": 420, "end": 580 }
     ]
@@ -130,8 +144,669 @@
     "id": "RHET-B",
     "subject": "Relaciones Humanas en Empresas de Desarrollo de Software y Base Tecnologica",
     "group": "B",
+    "year": 1,
     "schedules": [
       { "day": "Jueves", "start": 840, "end": 1000 }
+    ]
+  },{
+    "id": "DAW-A",
+    "subject": "Desarrollo de Aplicaciones Web",
+    "group": "A",
+    "year": 2,
+    "schedules": [
+      { "day": "Lunes", "start": 420, "end": 520 }
+    ]
+  },
+  {
+    "id": "EDA-A",
+    "subject": "Estructura de Datos y Algoritmos",
+    "group": "A",
+    "year": 2,
+    "schedules": [
+      { "day": "Lunes", "start": 530, "end": 630 },
+      { "day": "Jueves", "start": 530, "end": 630 }
+    ]
+  },
+  {
+    "id": "CVV-A",
+    "subject": "Calculo en Varias Variables",
+    "group": "A",
+    "year": 2,
+    "schedules": [
+      { "day": "Lunes", "start": 640, "end": 740 },
+      { "day": "Martes", "start": 580, "end": 690 },
+      { "day": "Viernes", "start": 530, "end": 630 }
+    ]
+  },
+  {
+    "id": "ING-A",
+    "subject": "Ingles",
+    "group": "A",
+    "year": 2,
+    "schedules": [
+      { "day": "Martes", "start": 420, "end": 520 }
+    ]
+  },
+  {
+    "id": "CI-A",
+    "subject": "Ciudadania e Interculturalidad",
+    "group": "A",
+    "year": 2,
+    "schedules": [
+      { "day": "Miercoles", "start": 420, "end": 520 }
+    ]
+  },
+  {
+    "id": "DEGCL-A",
+    "subject": "Desarrollo Emocional, Gestion de Conflictos y Liderazgo",
+    "group": "A",
+    "year": 2,
+    "schedules": [
+      { "day": "Miercoles", "start": 640, "end": 740 }
+    ]
+  },
+  {
+    "id": "EE-A",
+    "subject": "Enfoque Empresarial",
+    "group": "A",
+    "year": 2,
+    "schedules": [
+      { "day": "Jueves", "start": 420, "end": 520 },
+      { "day": "Viernes", "start": 420, "end": 520 }
+    ]
+  },
+  {
+    "id": "TIC-A",
+    "subject": "Taller de Internet de las Cosas",
+    "group": "A",
+    "year": 2,
+    "schedules": [
+      { "day": "Viernes", "start": 640, "end": 740 }
+    ]
+  },
+  {
+    "id": "DAW-B",
+    "subject": "Desarrollo de Aplicaciones Web",
+    "group": "B",
+    "year": 2,
+    "schedules": [
+      { "day": "Lunes", "start": 840, "end": 940 }
+    ]
+  },
+  {
+    "id": "EDA-B",
+    "subject": "Estructura de Datos y Algoritmos",
+    "group": "B",
+    "year": 2,
+    "schedules": [
+      { "day": "Martes", "start": 840, "end": 940 },
+      { "day": "Jueves", "start": 840, "end": 940 }
+    ]
+  },
+  {
+    "id": "ING-B",
+    "subject": "Ingles",
+    "group": "B",
+    "year": 2,
+    "schedules": [
+      { "day": "Miercoles", "start": 840, "end": 940 }
+    ]
+  },
+  {
+    "id": "CI-B",
+    "subject": "Ciudadania e Interculturalidad",
+    "group": "B",
+    "year": 2,
+    "schedules": [
+      { "day": "Viernes", "start": 840, "end": 940 }
+    ]
+  },
+  {
+    "id": "EE-B",
+    "subject": "Enfoque Empresarial",
+    "group": "B",
+    "year": 2,
+    "schedules": [
+      { "day": "Lunes", "start": 950, "end": 1050 },
+      { "day": "Jueves", "start": 950, "end": 1000 }
+    ]
+  },
+  {
+    "id": "DEGCL-B",
+    "subject": "Desarrollo Emocional, Gestion de Conflictos y Liderazgo",
+    "group": "B",
+    "year": 2,
+    "schedules": [
+      { "day": "Miercoles", "start": 1000, "end": 1110 }
+    ]
+  },
+  {
+    "id": "TIC-B",
+    "subject": "Taller de Internet de las Cosas",
+    "group": "B",
+    "year": 2,
+    "schedules": [
+      { "day": "Jueves", "start": 1060, "end": 1110 }
+    ]
+  },
+  {
+    "id": "CVV-B",
+    "subject": "Calculo en Varias Variables",
+    "group": "B",
+    "year": 2,
+    "schedules": [
+      { "day": "Lunes", "start": 1110, "end": 1210 },
+      { "day": "Miercoles", "start": 1110, "end": 1210 },
+      { "day": "Jueves", "start": 1110, "end": 1210 }
+    ]
+  },
+  {
+    "id": "EE-C",
+    "subject": "Enfoque Empresarial",
+    "group": "C",
+    "year": 2,
+    "schedules": [
+      { "day": "Martes", "start": 950, "end": 1050 },
+      { "day": "Viernes", "start": 1110, "end": 1210 }
+    ]
+  },
+  {
+    "id": "EDA-C",
+    "subject": "Estructura de Datos y Algoritmos",
+    "group": "C",
+    "year": 2,
+    "schedules": [
+      { "day": "Martes", "start": 1060, "end": 1160 },
+      { "day": "Viernes", "start": 1000, "end": 1110 }
+    ]
+  },{
+    "id": "BD-C",
+    "subject": "Base de datos",
+    "group": "C",
+    "year": 3,
+    "schedules": [
+      { "day": "Lunes", "start": 420, "end": 520 },
+      { "day": "Martes", "start": 690, "end": 790 }
+    ]
+  },
+  {
+    "id": "BD-A",
+    "subject": "Base de datos",
+    "group": "A",
+    "year": 3,
+    "schedules": [
+      { "day": "Lunes", "start": 530, "end": 630 },
+      { "day": "Martes", "start": 420, "end": 470 }
+    ]
+  },
+  {
+    "id": "IPS-A",
+    "subject": "Ingenieria y Procesos de Software",
+    "group": "A",
+    "year": 3,
+    "schedules": [
+      { "day": "Lunes", "start": 640, "end": 790 },
+      { "day": "Miercoles", "start": 420, "end": 470 }
+    ]
+  },
+  {
+    "id": "IPS-C",
+    "subject": "Ingenieria y Procesos de Software",
+    "group": "C",
+    "year": 3,
+    "schedules": [
+      { "day": "Miercoles", "start": 1060, "end": 1110 },
+      { "day": "Viernes", "start": 420, "end": 520 }
+    ]
+  },
+  {
+    "id": "PS-A",
+    "subject": "Programacion de Sistemas",
+    "group": "A",
+    "year": 3,
+    "schedules": [
+      { "day": "Jueves", "start": 420, "end": 520 }
+    ]
+  },
+  {
+    "id": "IO-A",
+    "subject": "Investigacion de Operaciones",
+    "group": "A",
+    "year": 3,
+    "schedules": [
+      { "day": "Miercoles", "start": 530, "end": 630 },
+      { "day": "Jueves", "start": 530, "end": 630 }
+    ]
+  },
+  {
+    "id": "OM-C",
+    "subject": "Organización y Metodos",
+    "group": "C",
+    "year": 3,
+    "schedules": [
+      { "day": "Viernes", "start": 580, "end": 740 }
+    ]
+  },
+  {
+    "id": "OM-A",
+    "subject": "Organización y Metodos",
+    "group": "A",
+    "year": 3,
+    "schedules": [
+      { "day": "Miercoles", "start": 690, "end": 790 }
+    ]
+  },
+  {
+    "id": "TC-A",
+    "subject": "Teoria de la Computacion",
+    "group": "A",
+    "year": 3,
+    "schedules": [
+      { "day": "Jueves", "start": 690, "end": 790 }
+    ]
+  },
+  {
+    "id": "TC-B",
+    "subject": "Teoria de la Computacion",
+    "group": "B",
+    "year": 3,
+    "schedules": [
+      { "day": "Lunes", "start": 840, "end": 940 }
+    ]
+  },
+  {
+    "id": "PS-B",
+    "subject": "Programacion de Sistemas",
+    "group": "B",
+    "year": 3,
+    "schedules": [
+      { "day": "Martes", "start": 840, "end": 940 }
+    ]
+  },
+  {
+    "id": "IO-B",
+    "subject": "Investigacion de Operaciones",
+    "group": "B",
+    "year": 3,
+    "schedules": [
+      { "day": "Miercoles", "start": 840, "end": 940 },
+      { "day": "Jueves", "start": 840, "end": 940 }
+    ]
+  },
+  {
+    "id": "BD-B",
+    "subject": "Base de datos",
+    "group": "B",
+    "year": 3,
+    "schedules": [
+      { "day": "Martes", "start": 950, "end": 1000 },
+      { "day": "Miercoles", "start": 950, "end": 1000 }
+    ]
+  },
+  {
+    "id": "PS-C",
+    "subject": "Programacion de Sistemas",
+    "group": "C",
+    "year": 3,
+    "schedules": [
+      { "day": "Lunes", "start": 1000, "end": 1110 }
+    ]
+  },
+  {
+    "id": "OM-B",
+    "subject": "Organización y Metodos",
+    "group": "B",
+    "year": 3,
+    "schedules": [
+      { "day": "Jueves", "start": 1000, "end": 1110 }
+    ]
+  },
+  {
+    "id": "IPS-B",
+    "subject": "Ingenieria y Procesos de Software",
+    "group": "B",
+    "year": 3,
+    "schedules": [
+      { "day": "Martes", "start": 1060, "end": 1160 },
+      { "day": "Viernes", "start": 950, "end": 1060 }
+    ]
+  },
+  {
+    "id": "IO-C",
+    "subject": "Investigacion de Operaciones",
+    "group": "C",
+    "year": 3,
+    "schedules": [
+      { "day": "Lunes", "start": 1110, "end": 1210 },
+      { "day": "Jueves", "start": 1110, "end": 1210 }
+    ]
+  },{
+    "id": "SD-A",
+    "subject": "Sistemas Distribuidos",
+    "group": "A",
+    "year": 4,
+    "schedules": [
+      { "day": "Lunes", "start": 420, "end": 520 },
+      { "day": "Jueves", "start": 420, "end": 470 }
+    ]
+  },
+  {
+    "id": "TI-A",
+    "subject": "Tecnologia de Informacion",
+    "group": "A",
+    "year": 4,
+    "schedules": [
+      { "day": "Martes", "start": 420, "end": 520 },
+      { "day": "Viernes", "start": 420, "end": 520 }
+    ]
+  },
+  {
+    "id": "IA-A",
+    "subject": "Inteligencia Artificial",
+    "group": "A",
+    "year": 4,
+    "schedules": [
+      { "day": "Miercoles", "start": 420, "end": 520 },
+      { "day": "Viernes", "start": 530, "end": 630 }
+    ]
+  },
+  {
+    "id": "IR-A",
+    "subject": "Ingenieria de Requerimientos",
+    "group": "A",
+    "year": 4,
+    "schedules": [
+      { "day": "Lunes", "start": 530, "end": 630 },
+      { "day": "Jueves", "start": 530, "end": 580 }
+    ]
+  },
+  {
+    "id": "ING-A",
+    "subject": "Ingles",
+    "group": "A",
+    "year": 4,
+    "schedules": [
+      { "day": "Martes", "start": 530, "end": 630 }
+    ]
+  },
+  {
+    "id": "TI-C",
+    "subject": "Tecnologia de Informacion",
+    "group": "C",
+    "year": 4,
+    "schedules": [
+      { "day": "Miercoles", "start": 580, "end": 630 },
+      { "day": "Viernes", "start": 640, "end": 740 }
+    ]
+  },
+  {
+    "id": "PS-A",
+    "subject": "Pruebas de Software",
+    "group": "A",
+    "year": 4,
+    "schedules": [
+      { "day": "Jueves", "start": 640, "end": 740 }
+    ]
+  },
+  {
+    "id": "FC-A",
+    "subject": "Fisica Computacional",
+    "group": "A",
+    "year": 4,
+    "schedules": [
+      { "day": "Miercoles", "start": 690, "end": 790 }
+    ]
+  },
+  {
+    "id": "IR-B",
+    "subject": "Ingenieria de Requerimientos",
+    "group": "B",
+    "year": 4,
+    "schedules": [
+      { "day": "Lunes", "start": 840, "end": 940 },
+      { "day": "Jueves", "start": 840, "end": 890 }
+    ]
+  },
+  {
+    "id": "SD-B",
+    "subject": "Sistemas Distribuidos",
+    "group": "B",
+    "year": 4,
+    "schedules": [
+      { "day": "Martes", "start": 840, "end": 890 },
+      { "day": "Lunes", "start": 950, "end": 1050 }
+    ]
+  },
+  {
+    "id": "TI-B",
+    "subject": "Tecnologia de Informacion",
+    "group": "B",
+    "year": 4,
+    "schedules": [
+      { "day": "Miercoles", "start": 840, "end": 940 },
+      { "day": "Martes", "start": 1060, "end": 1160 }
+    ]
+  },
+  {
+    "id": "PS-B",
+    "subject": "Pruebas de Software",
+    "group": "B",
+    "year": 4,
+    "schedules": [
+      { "day": "Viernes", "start": 840, "end": 940 }
+    ]
+  },
+  {
+    "id": "IA-B",
+    "subject": "Inteligencia Artificial",
+    "group": "B",
+    "year": 4,
+    "schedules": [
+      { "day": "Martes", "start": 950, "end": 1050 },
+      { "day": "Jueves", "start": 1000, "end": 1110 }
+    ]
+  },
+  {
+    "id": "FC-B",
+    "subject": "Fisica Computacional",
+    "group": "B",
+    "year": 4,
+    "schedules": [
+      { "day": "Miercoles", "start": 950, "end": 1050 }
+    ]
+  },
+  {
+    "id": "ING-B",
+    "subject": "Ingles",
+    "group": "B",
+    "year": 4,
+    "schedules": [
+      { "day": "Lunes", "start": 1060, "end": 1160 }
+    ]
+  },{
+    "id": "EGP-A",
+    "subject": "Etica General y Profesional",
+    "group": "A",
+    "year": 5,
+    "schedules": [
+      { "day": "Lunes", "start": 420, "end": 520 }
+    ]
+  },
+  {
+    "id": "GES-A",
+    "subject": "Gestion de Emprendimiento de Software",
+    "group": "A",
+    "year": 5,
+    "schedules": [
+      { "day": "Martes", "start": 420, "end": 520 }
+    ]
+  },
+  {
+    "id": "TABD-A",
+    "subject": "Topicos Avanzados en Base de Datos (E)",
+    "group": "A",
+    "year": 5,
+    "schedules": [
+      { "day": "Miercoles", "start": 420, "end": 520 },
+      { "day": "Lunes", "start": 690, "end": 790 }
+    ]
+  },
+  {
+    "id": "CGVCM-A",
+    "subject": "Computacion Grafica, Vision Computacional y Multimedia (E)",
+    "group": "A",
+    "year": 5,
+    "schedules": [
+      { "day": "Jueves", "start": 420, "end": 520 }
+    ]
+  },
+  {
+    "id": "DANP-A",
+    "subject": "Desarrollo Avanzado en Nuevas Plataformas (E)",
+    "group": "A",
+    "year": 5,
+    "schedules": [
+      { "day": "Viernes", "start": 420, "end": 520 }
+    ]
+  },
+  {
+    "id": "ST1-A",
+    "subject": "Seminario de Tesis 1",
+    "group": "A",
+    "year": 5,
+    "schedules": [
+      { "day": "Lunes", "start": 580, "end": 690 },
+      { "day": "Jueves", "start": 580, "end": 690 }
+    ]
+  },
+  {
+    "id": "SI-A",
+    "subject": "Seguridad Informatica",
+    "group": "A",
+    "year": 5,
+    "schedules": [
+      { "day": "Miercoles", "start": 580, "end": 740 }
+    ]
+  },
+  {
+    "id": "MCES-A",
+    "subject": "Manteniemto, Configuracion y Evolucion de Software",
+    "group": "A",
+    "year": 5,
+    "schedules": [
+      { "day": "Viernes", "start": 580, "end": 740 }
+    ]
+  },
+  {
+    "id": "PIS1-A",
+    "subject": "Proyecto de Ingenieria de Software 1",
+    "group": "A",
+    "year": 5,
+    "schedules": [
+      { "day": "Jueves", "start": 690, "end": 790 }
+    ]
+  },
+  {
+    "id": "ST1-B",
+    "subject": "Seminario de Tesis 1",
+    "group": "B",
+    "year": 5,
+    "schedules": [
+      { "day": "Lunes", "start": 840, "end": 940 },
+      { "day": "Jueves", "start": 840, "end": 940 }
+    ]
+  },
+  {
+    "id": "SI-B",
+    "subject": "Seguridad Informatica",
+    "group": "B",
+    "year": 5,
+    "schedules": [
+      { "day": "Martes", "start": 840, "end": 940 }
+    ]
+  },
+  {
+    "id": "EGP-B",
+    "subject": "Etica General y Profesional",
+    "group": "B",
+    "year": 5,
+    "schedules": [
+      { "day": "Miercoles", "start": 840, "end": 940 }
+    ]
+  },
+  {
+    "id": "PIS1-B",
+    "subject": "Proyecto de Ingenieria de Software 1",
+    "group": "B",
+    "year": 5,
+    "schedules": [
+      { "day": "Lunes", "start": 950, "end": 1050 }
+    ]
+  },
+  {
+    "id": "MCES-B",
+    "subject": "Manteniemto, Configuracion y Evolucion de Software",
+    "group": "B",
+    "year": 5,
+    "schedules": [
+      { "day": "Miercoles", "start": 1000, "end": 1110 }
+    ]
+  },
+  {
+    "id": "GES-B",
+    "subject": "Gestion de Emprendimiento de Software",
+    "group": "B",
+    "year": 5,
+    "schedules": [
+      { "day": "Jueves", "start": 1000, "end": 1110 }
+    ]
+  },{
+    "id": "RH-C",
+    "subject": "Relaciones Humanas en Empresas de Desarrollo de Software y Base Tecnologica",
+    "group": "C",
+    "year": 1,
+    "schedules": [
+      { "day": "Viernes", "start": 420, "end": 520 }
+    ]
+  },
+  {
+    "id": "ED1-C",
+    "subject": "Estructuras Discretas I",
+    "group": "C",
+    "year": 1,
+    "schedules": [
+      { "day": "Miercoles", "start": 530, "end": 630 },
+      { "day": "Jueves", "start": 530, "end": 630 }
+    ]
+  },
+  {
+    "id": "II-C",
+    "subject": "Introduccion a la Ingenieria",
+    "group": "C",
+    "year": 1,
+    "schedules": [
+      { "day": "Lunes", "start": 690, "end": 790 },
+      { "day": "Miercoles", "start": 690, "end": 790 }
+    ]
+  },
+  {
+    "id": "IDS-C",
+    "subject": "Introduccion al Desarrollo de Software",
+    "group": "C",
+    "year": 1,
+    "schedules": [
+      { "day": "Lunes", "start": 840, "end": 940 },
+      { "day": "Miercoles", "start": 840, "end": 940 }
+    ]
+  },
+  {
+    "id": "AL-C",
+    "subject": "Algebra Lineal",
+    "group": "C",
+    "year": 1,
+    "schedules": [
+      { "day": "Martes", "start": 1060, "end": 1160 },
+      { "day": "Lunes", "start": 1110, "end": 1210 }
     ]
   }
 ]

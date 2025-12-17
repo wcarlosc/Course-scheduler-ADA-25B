@@ -6,12 +6,14 @@ public class Course {
     private String id;
     private String subject;
     private String group;
+    private int year;
     private List<TimeSlot> schedules;
 
-    public Course(String id, String subject, String group, List<TimeSlot> schedules) {
+    public Course(String id, String subject, String group, int year, List<TimeSlot> schedules) {
         this.id = id;
         this.subject = subject;
         this.group = group;
+        this.year = year;
         this.schedules = schedules;
     }
 
@@ -25,6 +27,10 @@ public class Course {
 
     public String getGroup() {
         return group;
+    }
+
+    public int getYear() {
+        return year;
     }
 
     public List<TimeSlot> getSchedules() {

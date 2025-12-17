@@ -139,43 +139,67 @@ public class SchedulerGUI extends Application {
         sep1.setStyle("-fx-background-color: " + PRIMARY_COLOR + ";");
 
         // Título materias
-        Label subjectsTitle = new Label(" Selecciona materias:");
+        Label subjectsTitle = new Label(" Cursos:");
         subjectsTitle.setFont(Font.font("Segoe UI", FontWeight.BOLD, 14));
         subjectsTitle.setStyle("-fx-text-fill: " + TEXT_COLOR + ";");
 
-        // Contenedor de checkboxes
-        subjectsContainer = new VBox(10);
+        // Contenedor de checkboxes organizados por año
+        subjectsContainer = new VBox(15);
         subjectsContainer.setPadding(new Insets(10, 0, 0, 0));
         
         subjectCheckBoxes = new HashMap<>();
-        List<String> availableSubjects = allCourses.stream()
-                .map(Course::getSubject)
-                .distinct()
-                .sorted()
-                .collect(Collectors.toList());
+        
+        // Organizar cursos por año
+        Map<Integer, List<Course>> coursesByYear = allCourses.stream()
+                .collect(Collectors.groupingBy(Course::getYear));
+        
+        String[] yearLabels = {"1er Año", "2do Año", "3er Año", "4to Año", "5to Año"};
+        
+        for (int year = 1; year <= 5; year++) {
+            List<Course> coursesInYear = coursesByYear.getOrDefault(year, new java.util.ArrayList<>());
+            if (!coursesInYear.isEmpty()) {
+                // Título del año
+                Label yearLabel = new Label(" " + yearLabels[year - 1]);
+                yearLabel.setFont(Font.font("Segoe UI", FontWeight.BOLD, 16));
+                yearLabel.setStyle("-fx-text-fill: " + PRIMARY_COLOR + ";");
+                subjectsContainer.getChildren().add(yearLabel);
+                
+                // Obtener materias únicas para este año
+                List<String> subjectsInYear = coursesInYear.stream()
+                        .map(Course::getSubject)
+                        .distinct()
+                        .sorted()
+                        .collect(Collectors.toList());
+                
+                VBox yearBox = new VBox(8);
+                yearBox.setPadding(new Insets(5, 0, 10, 15));
+                
+                for (String subject : subjectsInYear) {
+                    long groupCount = coursesInYear.stream()
+                            .filter(c -> c.getSubject().equals(subject))
+                            .count();
 
-        for (String subject : availableSubjects) {
-            long groupCount = allCourses.stream()
-                    .filter(c -> c.getSubject().equals(subject))
-                    .count();
+                    CheckBox checkBox = new CheckBox(subject + " (" + groupCount + " grupos)");
+                    checkBox.setFont(Font.font("Segoe UI", 13));
+                    checkBox.setStyle(
+                        "-fx-text-fill: " + TEXT_COLOR + ";" +
+                        "-fx-cursor: hand;"
+                    );
+                    
+                    // Estilo personalizado para el checkbox
+                    checkBox.setOnMouseEntered(e -> 
+                        checkBox.setStyle("-fx-text-fill: " + ACCENT_COLOR + "; -fx-cursor: hand;")
+                    );
+                    checkBox.setOnMouseExited(e -> 
+                        checkBox.setStyle("-fx-text-fill: " + TEXT_COLOR + "; -fx-cursor: hand;")
+                    );
 
-            CheckBox checkBox = new CheckBox(subject + " (" + groupCount + " grupos)");
-            checkBox.setFont(Font.font("Segoe UI", 14));
-            checkBox.setStyle(
-                "-fx-text-fill: " + TEXT_COLOR + ";" +
-                "-fx-cursor: hand;"
-            );
-            
-            // Estilo personalizado para el checkbox
-            checkBox.setOnMouseEntered(e -> 
-                checkBox.setStyle("-fx-text-fill: " + ACCENT_COLOR + "; -fx-cursor: hand;")
-            );
-            checkBox.setOnMouseExited(e -> 
-                checkBox.setStyle("-fx-text-fill: " + TEXT_COLOR + "; -fx-cursor: hand;")
-            );
-
-            subjectCheckBoxes.put(subject, checkBox);
-            subjectsContainer.getChildren().add(checkBox);
+                    subjectCheckBoxes.put(subject, checkBox);
+                    yearBox.getChildren().add(checkBox);
+                }
+                
+                subjectsContainer.getChildren().add(yearBox);
+            }
         }
 
         ScrollPane scrollPane = new ScrollPane(subjectsContainer);
@@ -190,7 +214,7 @@ public class SchedulerGUI extends Application {
         Button generateButton = createStyledButton("Generar", PRIMARY_COLOR);
         generateButton.setOnAction(e -> generateSchedules());
 
-        Button clearButton = createStyledButton("Limpiar", SECONDARY_COLOR);
+        Button clearButton = createStyledButton("Limpiar", PRIMARY_COLOR);
         clearButton.setOnAction(e -> clearSelection());
 
         buttons.getChildren().addAll(generateButton, clearButton);
@@ -245,27 +269,9 @@ public class SchedulerGUI extends Application {
             "-fx-padding: 10 20;"
         );
 
-        button.setOnMouseEntered(e -> 
-            button.setStyle(
-                "-fx-background-color: derive(" + color + ", 20%);" +
-                "-fx-text-fill: white;" +
-                "-fx-background-radius: 8;" +
-                "-fx-cursor: hand;" +
-                "-fx-padding: 10 20;" +
-                "-fx-scale-x: 1.05;" +
-                "-fx-scale-y: 1.05;"
-            )
-        );
+        
 
-        button.setOnMouseExited(e -> 
-            button.setStyle(
-                "-fx-background-color: " + color + ";" +
-                "-fx-text-fill: white;" +
-                "-fx-background-radius: 8;" +
-                "-fx-cursor: hand;" +
-                "-fx-padding: 10 20;"
-            )
-        );
+        
 
         return button;
     }
