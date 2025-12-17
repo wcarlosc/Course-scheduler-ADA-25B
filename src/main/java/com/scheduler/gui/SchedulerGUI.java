@@ -28,8 +28,11 @@ import javafx.scene.control.TextArea;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Line;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
@@ -375,7 +378,7 @@ public class SchedulerGUI extends Application {
         int limit = Math.min(result.getSolutions().size(), maxSolutions);
 
         for (int i = 0; i < limit; i++) {
-            VBox scheduleCard = createScheduleCard(result.getSolutions().get(i), i + 1);
+            HBox scheduleCard = createScheduleCard(result.getSolutions().get(i), i + 1);
             resultsContainer.getChildren().add(scheduleCard);
         }
 
@@ -589,8 +592,8 @@ public class SchedulerGUI extends Application {
         return chart;
     }
 
-    private VBox createScheduleCard(List<Course> schedule, int optionNumber) {
-        VBox card = new VBox(10);
+    private HBox createScheduleCard(List<Course> schedule, int optionNumber) {
+        HBox card = new HBox(15);
         card.setPadding(new Insets(15));
         card.setStyle(
             "-fx-background-color: " + CARD_BG + ";" +
@@ -600,40 +603,219 @@ public class SchedulerGUI extends Application {
             "-fx-border-radius: 10;"
         );
 
-        Label header = new Label("Opción " + optionNumber);
-        header.setFont(Font.font("Segoe UI", FontWeight.BOLD, 16));
-        header.setStyle("-fx-text-fill: " + PRIMARY_COLOR + ";");
+        // Parte Gráfica (Izquierda)
+        VBox graphicContainer = new VBox(5);
+        Label graphicTitle = new Label("Opción " + optionNumber);
+        graphicTitle.setFont(Font.font("Segoe UI", FontWeight.BOLD, 16));
+        graphicTitle.setStyle("-fx-text-fill: " + PRIMARY_COLOR + ";");
+        
+        Pane graphicSchedule = createGraphicalSchedule(schedule);
+        graphicContainer.getChildren().addAll(graphicTitle, graphicSchedule);
 
-        card.getChildren().add(header);
+        // Parte Textual (Derecha)
+        VBox textDetails = createTextualDetails(schedule);
+        HBox.setHgrow(textDetails, Priority.ALWAYS);
 
-        for (Course course : schedule) {
-            VBox courseBox = new VBox(5);
-            courseBox.setPadding(new Insets(8));
-            courseBox.setStyle(
-                "-fx-background-color: derive(" + CARD_BG + ", 10%);" +
-                "-fx-background-radius: 5;" +
-                "-fx-border-color: " + ACCENT_COLOR + ";" +
-                "-fx-border-width: 1;" +
-                "-fx-border-radius: 5;"
-            );
+        card.getChildren().addAll(graphicContainer, textDetails);
+        return card;
+    }
 
-            Label courseName = new Label(course.getSubject() + " - Grupo " + course.getGroup());
-            courseName.setFont(Font.font("Segoe UI", FontWeight.BOLD, 14));
-            courseName.setStyle("-fx-text-fill: " + SECONDARY_COLOR + ";");
+    private Pane createGraphicalSchedule(List<Course> schedule) {
+        Pane pane = new Pane();
+        double timeColWidth = 60; // Ancho columna de horas
+        double headerHeight = 35; // Altura del encabezado de días
+        double colWidth = 110; // Ancho por día
+        double startHour = 7; // 7:00 AM
+        double endHour = 22; // 10:00 PM
+        double pxPerMin = 0.7; // Escala vertical mejorada
+        double totalHeight = headerHeight + ((endHour - startHour + 1) * 60 * pxPerMin);
+        double totalWidth = timeColWidth + (colWidth * 6);
+        
+        pane.setPrefSize(totalWidth, totalHeight); 
+        pane.setMinSize(totalWidth, totalHeight);
+        pane.setStyle("-fx-background-color: #2a2a2a; -fx-border-color: " + PRIMARY_COLOR + "; -fx-border-width: 2;");
 
-            courseBox.getChildren().add(courseName);
+        // Fondo para área de horas
+        Rectangle timeBg = new Rectangle(0, 0, timeColWidth, totalHeight);
+        timeBg.setFill(javafx.scene.paint.Color.web("#1f1f1f"));
+        pane.getChildren().add(timeBg);
 
-            for (var timeSlot : course.getSchedules()) {
-                Label timeLabel = new Label("   🕐 " + timeSlot.toString());
-                timeLabel.setFont(Font.font("Segoe UI", 12));
-                timeLabel.setStyle("-fx-text-fill: " + TEXT_COLOR + ";");
-                courseBox.getChildren().add(timeLabel);
-            }
+        // Fondo para encabezado de días
+        Rectangle headerBg = new Rectangle(timeColWidth, 0, totalWidth - timeColWidth, headerHeight);
+        headerBg.setFill(javafx.scene.paint.Color.web("#1f1f1f"));
+        pane.getChildren().add(headerBg);
 
-            card.getChildren().add(courseBox);
+        // Etiquetas de días
+        String[] days = {"LUN", "MAR", "MIÉ", "JUE", "VIE", "SÁB"};
+        for (int i = 0; i < days.length; i++) {
+            Label dayLabel = new Label(days[i]);
+            dayLabel.setFont(Font.font("Segoe UI", FontWeight.BOLD, 12));
+            dayLabel.setTextFill(javafx.scene.paint.Color.web(PRIMARY_COLOR));
+            dayLabel.setAlignment(Pos.CENTER);
+            dayLabel.setPrefWidth(colWidth);
+            dayLabel.setLayoutX(timeColWidth + (i * colWidth));
+            dayLabel.setLayoutY(8);
+            dayLabel.setStyle("-fx-alignment: center;");
+            pane.getChildren().add(dayLabel);
         }
 
-        return card;
+        // Línea horizontal separadora del encabezado
+        Line headerLine = new Line(0, headerHeight, totalWidth, headerHeight);
+        headerLine.setStroke(javafx.scene.paint.Color.web(PRIMARY_COLOR));
+        headerLine.setStrokeWidth(2);
+        pane.getChildren().add(headerLine);
+
+        // Líneas verticales para separar días
+        for (int i = 0; i <= 6; i++) {
+            double x = timeColWidth + (i * colWidth);
+            Line vLine = new Line(x, headerHeight, x, totalHeight);
+            vLine.setStroke(javafx.scene.paint.Color.web("#3a3a3a"));
+            vLine.setStrokeWidth(i == 0 ? 2 : 1);
+            pane.getChildren().add(vLine);
+        }
+
+        // Dibujar líneas de tiempo y etiquetas
+        for (int h = (int)startHour; h <= endHour; h++) {
+            double y = headerHeight + ((h * 60 - (startHour * 60)) * pxPerMin);
+            
+            // Etiqueta de hora
+            Label timeLabel = new Label(String.format("%02d:00", h));
+            timeLabel.setFont(Font.font("Segoe UI", FontWeight.BOLD, 11));
+            timeLabel.setTextFill(javafx.scene.paint.Color.web("#CCCCCC"));
+            timeLabel.setLayoutX(8);
+            timeLabel.setLayoutY(y - 8);
+            pane.getChildren().add(timeLabel);
+
+            // Línea horizontal
+            Line line = new Line(timeColWidth, y, totalWidth, y);
+            line.setStroke(javafx.scene.paint.Color.web("#3a3a3a"));
+            line.setStrokeWidth(0.5);
+            pane.getChildren().add(line);
+            
+            // Líneas de media hora (más tenues)
+            if (h < endHour) {
+                double halfY = y + (30 * pxPerMin);
+                Line halfLine = new Line(timeColWidth, halfY, totalWidth, halfY);
+                halfLine.setStroke(javafx.scene.paint.Color.web("#2d2d2d"));
+                halfLine.setStrokeWidth(0.5);
+                halfLine.getStrokeDashArray().addAll(3d, 3d);
+                pane.getChildren().add(halfLine);
+            }
+        }
+
+        // Asignar colores a materias
+        Map<String, String> subjectColors = new HashMap<>();
+        String[] palette = {"#FF6B6B", "#4ECDC4", "#45B7D1", "#FFA07A", "#98D8C8", "#F7DC6F", "#BB8FCE", "#85C1E2"};
+        
+        int idx = 0;
+        for (Course course : schedule) {
+             if (!subjectColors.containsKey(course.getSubject())) {
+                 subjectColors.put(course.getSubject(), palette[idx % palette.length]);
+                 idx++;
+             }
+        }
+
+        // Dibujar bloques de cursos
+        for (Course course : schedule) {
+            String color = subjectColors.get(course.getSubject());
+            for (var slot : course.getSchedules()) {
+                int dayIdx = getDayIndex(slot.getDay());
+                if (dayIdx == -1) continue;
+
+                double x = timeColWidth + (dayIdx * colWidth) + 2;
+                double y = headerHeight + ((slot.getStart() - (startHour * 60)) * pxPerMin);
+                double height = (slot.getEnd() - slot.getStart()) * pxPerMin;
+
+                // Asegurar que no se salga del panel
+                if (y < headerHeight) y = headerHeight;
+                if (y + height > totalHeight) height = totalHeight - y;
+
+                // Rectángulo del curso con sombra
+                Rectangle shadow = new Rectangle(x + 2, y + 2, colWidth - 6, height);
+                shadow.setFill(javafx.scene.paint.Color.web("#000000"));
+                shadow.setOpacity(0.3);
+                shadow.setArcWidth(8);
+                shadow.setArcHeight(8);
+                pane.getChildren().add(shadow);
+
+                Rectangle rect = new Rectangle(x, y, colWidth - 6, height);
+                rect.setFill(javafx.scene.paint.Color.web(color));
+                rect.setArcWidth(8);
+                rect.setArcHeight(8);
+                rect.setOpacity(0.9);
+                rect.setStroke(javafx.scene.paint.Color.web("#ffffff"));
+                rect.setStrokeWidth(1.5);
+                pane.getChildren().add(rect);
+
+                // Etiqueta del curso
+                String courseName = course.getSubject();
+                if (courseName.length() > 25) {
+                    courseName = courseName.substring(0, 22) + "...";
+                }
+                
+                Label lbl = new Label(courseName + "\nGrupo " + course.getGroup());
+                lbl.setFont(Font.font("Segoe UI", FontWeight.BOLD, 9));
+                lbl.setTextFill(javafx.scene.paint.Color.WHITE);
+                lbl.setWrapText(true);
+                lbl.setMaxWidth(colWidth - 10);
+                lbl.setLayoutX(x + 5);
+                lbl.setLayoutY(y + 5);
+                lbl.setStyle("-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 2, 0, 1, 1);");
+                pane.getChildren().add(lbl);
+            }
+        }
+
+        return pane;
+    }
+
+    private VBox createTextualDetails(List<Course> schedule) {
+        VBox box = new VBox(10);
+        box.setPadding(new Insets(10));
+        box.setPrefWidth(300);
+        
+        Label title = new Label("Detalles de Grupos");
+        title.setFont(Font.font("Segoe UI", FontWeight.BOLD, 14));
+        title.setStyle("-fx-text-fill: " + SECONDARY_COLOR + ";");
+        box.getChildren().add(title);
+
+        for (Course course : schedule) {
+            VBox item = new VBox(3);
+            item.setStyle("-fx-border-color: #555; -fx-border-width: 0 0 1 0; -fx-padding: 5;");
+            
+            Label name = new Label(course.getSubject());
+            name.setFont(Font.font("Segoe UI", FontWeight.BOLD, 12));
+            name.setStyle("-fx-text-fill: " + TEXT_COLOR + ";");
+            name.setWrapText(true);
+            
+            Label group = new Label("Grupo: " + course.getGroup());
+            group.setStyle("-fx-text-fill: " + ACCENT_COLOR + ";");
+
+            StringBuilder times = new StringBuilder();
+            for(var slot : course.getSchedules()) {
+                times.append(slot.toString()).append("\n");
+            }
+            Label timeLbl = new Label(times.toString());
+            timeLbl.setStyle("-fx-text-fill: #aaa; -fx-font-size: 11px;");
+
+            item.getChildren().addAll(name, group, timeLbl);
+            box.getChildren().add(item);
+        }
+        return box;
+    }
+
+    private int getDayIndex(String day) {
+        if (day == null) return -1;
+        switch(day.toLowerCase().trim()) {
+            case "lunes": return 0;
+            case "martes": return 1;
+            case "miercoles": return 2;
+            case "miércoles": return 2;
+            case "jueves": return 3;
+            case "viernes": return 4;
+            case "sabado": return 5;
+            case "sábado": return 5;
+            default: return -1;
+        }
     }
 
     private void clearSelection() {
