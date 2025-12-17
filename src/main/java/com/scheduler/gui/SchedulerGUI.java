@@ -277,7 +277,7 @@ public class SchedulerGUI extends Application {
         resultsContainer = new VBox(15);
         resultsContainer.setPadding(new Insets(10));
 
-        Label placeholder = new Label("Selecciona las materias y presiona 'Generar'");
+        Label placeholder = new Label("Presiona Generar para ver los horarios generados.");
         placeholder.setFont(Font.font("Segoe UI", FontWeight.NORMAL, 14));
         placeholder.setStyle("-fx-text-fill: " + TEXT_COLOR + "; -fx-opacity: 0.6;");
         placeholder.setAlignment(Pos.CENTER);
@@ -811,7 +811,7 @@ public class SchedulerGUI extends Application {
         subjectCheckBoxes.values().forEach(cb -> cb.setSelected(false));
         resultsContainer.getChildren().clear();
         
-        Label placeholder = new Label("Selecciona las materias y presiona 'Generar'");
+        Label placeholder = new Label("Presiona Generar para ver los horarios");
         placeholder.setFont(Font.font("Segoe UI", FontWeight.NORMAL, 14));
         placeholder.setStyle("-fx-text-fill: " + TEXT_COLOR + "; -fx-opacity: 0.6;");
         resultsContainer.getChildren().add(placeholder);
