@@ -9,6 +9,8 @@ import com.scheduler.algorithm.AlgorithmBenchmark;
 import com.scheduler.algorithm.AlgorithmType;
 import com.scheduler.algorithm.BenchmarkResult;
 import com.scheduler.logic.DataLoader;
+import com.scheduler.logic.PriorityType;
+import com.scheduler.logic.ScheduleEvaluator;
 import com.scheduler.model.Course;
 
 import javafx.application.Application;
@@ -47,6 +49,7 @@ public class SchedulerGUI extends Application {
     private ComboBox<AlgorithmType> algorithmSelector;
     private CheckBox compareAllCheckbox;
     private Spinner<Integer> maxSolutionsSpinner;
+    private ComboBox<PriorityType> prioritySelector;
 
     // Colores
     private static final String PRIMARY_COLOR = "#FF6B35"; 
@@ -155,6 +158,23 @@ public class SchedulerGUI extends Application {
         maxSolutionsSpinner.setEditable(true);
         maxSolutionsSpinner.setPrefWidth(320);
 
+        // Selector de priorización
+        Label priorityLabel = new Label("Priorización:");
+        priorityLabel.setFont(Font.font("Segoe UI", FontWeight.BOLD, 14));
+        priorityLabel.setStyle(
+            "-fx-text-fill: " + TEXT_COLOR + ";" +
+            "-fx-padding: 5 0 0 0;"
+        );
+
+        prioritySelector = new ComboBox<>();
+        prioritySelector.getItems().addAll(PriorityType.values());
+        prioritySelector.setValue(PriorityType.NONE);
+        prioritySelector.setPrefWidth(320);
+        prioritySelector.setStyle(
+            "-fx-background-color: " + TEXT_COLOR  + ";" +
+            "-fx-text-fill: " + TEXT_COLOR + ";"
+        );
+
         Separator sep1 = new Separator();
         sep1.setStyle("-fx-background-color: " + PRIMARY_COLOR + ";");
 
@@ -261,6 +281,7 @@ public class SchedulerGUI extends Application {
 
         panel.getChildren().addAll(title, algoLabel, algorithmSelector, compareAllCheckbox, 
                                    limitLabel, maxSolutionsSpinner,
+                                   priorityLabel, prioritySelector,
                                    sep1, subjectsTitle, scrollPane, buttons, statusLabel);
         return panel;
     }
@@ -330,7 +351,8 @@ public class SchedulerGUI extends Application {
         statusLabel.setStyle("-fx-text-fill: " + PRIMARY_COLOR + ";");
 
         AlgorithmBenchmark benchmark = new AlgorithmBenchmark(allCourses);
-        BenchmarkResult result = benchmark.runBenchmark(algorithmSelector.getValue(), selectedSubjects);
+        PriorityType priority = prioritySelector.getValue();
+        BenchmarkResult result = benchmark.runBenchmark(algorithmSelector.getValue(), selectedSubjects, priority);
 
         displaySingleResult(result);
     }
@@ -340,7 +362,8 @@ public class SchedulerGUI extends Application {
         statusLabel.setStyle("-fx-text-fill: " + PRIMARY_COLOR + ";");
 
         AlgorithmBenchmark benchmark = new AlgorithmBenchmark(allCourses);
-        List<BenchmarkResult> results = benchmark.runAllBenchmarks(selectedSubjects);
+        PriorityType priority = prioritySelector.getValue();
+        List<BenchmarkResult> results = benchmark.runAllBenchmarks(selectedSubjects, priority);
 
         displayComparisonResults(results, benchmark);
     }
@@ -768,6 +791,17 @@ public class SchedulerGUI extends Application {
         title.setFont(Font.font("Segoe UI", FontWeight.BOLD, 14));
         title.setStyle("-fx-text-fill: " + SECONDARY_COLOR + ";");
         box.getChildren().add(title);
+        
+        // Agregar métricas del horario
+        Label metrics = new Label(ScheduleEvaluator.getScheduleMetrics(schedule));
+        metrics.setFont(Font.font("Segoe UI", 11));
+        metrics.setStyle("-fx-text-fill: " + ACCENT_COLOR + ";");
+        metrics.setWrapText(true);
+        box.getChildren().add(metrics);
+        
+        Separator metricsSep = new Separator();
+        metricsSep.setStyle("-fx-background-color: #555;");
+        box.getChildren().add(metricsSep);
 
         for (Course course : schedule) {
             VBox item = new VBox(3);

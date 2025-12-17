@@ -22,6 +22,16 @@ public class Scheduler {
      * @return lista de todas las combinaciones de horarios sin conflictos
      */
     public List<List<Course>> generateSchedules(List<String> desiredSubjects) {
+        return generateSchedules(desiredSubjects, PriorityType.NONE);
+    }
+
+    /**
+     * Genera todos los horarios válidos para las materias deseadas, ordenados por prioridad
+     * @param desiredSubjects lista de materias que el usuario quiere llevar
+     * @param priority tipo de priorización a aplicar
+     * @return lista de todas las combinaciones de horarios sin conflictos, ordenadas
+     */
+    public List<List<Course>> generateSchedules(List<String> desiredSubjects, PriorityType priority) {
         List<List<Course>> validSchedules = new ArrayList<>();
         
         // Agrupar cursos por materia para acceso rápido
@@ -39,7 +49,9 @@ public class Scheduler {
 
         // Iniciar el algoritmo de backtracking
         backtrack(desiredSubjects, 0, new ArrayList<>(), validSchedules, coursesBySubject);
-        return validSchedules;
+        
+        // Ordenar según la prioridad seleccionada
+        return ScheduleEvaluator.sortSchedules(validSchedules, priority);
     }
 
     /**

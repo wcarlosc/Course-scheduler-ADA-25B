@@ -2,6 +2,7 @@ package com.scheduler.algorithm;
 
 import java.util.List;
 
+import com.scheduler.logic.PriorityType;
 import com.scheduler.logic.Scheduler;
 import com.scheduler.model.Course;
 
@@ -16,6 +17,10 @@ public class AlgorithmBenchmark {
 
     
     public BenchmarkResult runBenchmark(AlgorithmType algorithmType, List<String> desiredSubjects) {
+        return runBenchmark(algorithmType, desiredSubjects, PriorityType.NONE);
+    }
+
+    public BenchmarkResult runBenchmark(AlgorithmType algorithmType, List<String> desiredSubjects, PriorityType priority) {
         // Forzar garbage collection antes de medir
         System.gc();
         
@@ -27,22 +32,22 @@ public class AlgorithmBenchmark {
         switch (algorithmType) {
             case BACKTRACKING:
                 Scheduler backtracking = new Scheduler(allCourses);
-                solutions = backtracking.generateSchedules(desiredSubjects);
+                solutions = backtracking.generateSchedules(desiredSubjects, priority);
                 break;
 
             case DIVIDE_CONQUER:
                 DivideConquerScheduler divideConquer = new DivideConquerScheduler(allCourses);
-                solutions = divideConquer.generateSchedules(desiredSubjects);
+                solutions = divideConquer.generateSchedules(desiredSubjects, priority);
                 break;
 
             case GREEDY:
                 GreedyScheduler greedy = new GreedyScheduler(allCourses);
-                solutions = greedy.generateSchedules(desiredSubjects);
+                solutions = greedy.generateSchedules(desiredSubjects, priority);
                 break;
 
             case DYNAMIC_PROGRAMMING:
                 DynamicProgrammingScheduler dp = new DynamicProgrammingScheduler(allCourses);
-                solutions = dp.generateSchedules(desiredSubjects);
+                solutions = dp.generateSchedules(desiredSubjects, priority);
                 break;
         }
 
@@ -59,11 +64,15 @@ public class AlgorithmBenchmark {
      * Ejecuta benchmark para todos los algoritmos
      */
     public List<BenchmarkResult> runAllBenchmarks(List<String> desiredSubjects) {
+        return runAllBenchmarks(desiredSubjects, PriorityType.NONE);
+    }
+
+    public List<BenchmarkResult> runAllBenchmarks(List<String> desiredSubjects, PriorityType priority) {
         return List.of(
-            runBenchmark(AlgorithmType.BACKTRACKING, desiredSubjects),
-            runBenchmark(AlgorithmType.DIVIDE_CONQUER, desiredSubjects),
-            runBenchmark(AlgorithmType.GREEDY, desiredSubjects),
-            runBenchmark(AlgorithmType.DYNAMIC_PROGRAMMING, desiredSubjects)
+            runBenchmark(AlgorithmType.BACKTRACKING, desiredSubjects, priority),
+            runBenchmark(AlgorithmType.DIVIDE_CONQUER, desiredSubjects, priority),
+            runBenchmark(AlgorithmType.GREEDY, desiredSubjects, priority),
+            runBenchmark(AlgorithmType.DYNAMIC_PROGRAMMING, desiredSubjects, priority)
         );
     }
 

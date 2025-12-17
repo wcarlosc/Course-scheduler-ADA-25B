@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import com.scheduler.logic.PriorityType;
+import com.scheduler.logic.ScheduleEvaluator;
 import com.scheduler.model.Course;
 import com.scheduler.model.TimeSlot;
 
@@ -27,6 +29,10 @@ public class GreedyScheduler {
     }
 
     public List<List<Course>> generateSchedules(List<String> desiredSubjects) {
+        return generateSchedules(desiredSubjects, PriorityType.NONE);
+    }
+
+    public List<List<Course>> generateSchedules(List<String> desiredSubjects, PriorityType priority) {
         List<List<Course>> solutions = new ArrayList<>();
         
         Map<String, List<Course>> coursesBySubject = allCourses.stream()
@@ -46,10 +52,12 @@ public class GreedyScheduler {
         solutions.add(greedyByLeastConflicts(desiredSubjects, coursesBySubject));
 
         // Eliminar soluciones nulas o duplicadas
-        return solutions.stream()
+        List<List<Course>> validSolutions = solutions.stream()
             .filter(Objects::nonNull)
             .distinct()
             .collect(Collectors.toList());
+            
+        return ScheduleEvaluator.sortSchedules(validSolutions, priority);
     }
 
     /**

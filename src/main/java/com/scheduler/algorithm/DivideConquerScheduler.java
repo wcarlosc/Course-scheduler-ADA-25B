@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.scheduler.logic.PriorityType;
+import com.scheduler.logic.ScheduleEvaluator;
 import com.scheduler.model.Course;
 
 /**
@@ -24,6 +26,10 @@ public class DivideConquerScheduler {
     }
 
     public List<List<Course>> generateSchedules(List<String> desiredSubjects) {
+        return generateSchedules(desiredSubjects, PriorityType.NONE);
+    }
+
+    public List<List<Course>> generateSchedules(List<String> desiredSubjects, PriorityType priority) {
         if (desiredSubjects.isEmpty()) {
             return new ArrayList<>();
         }
@@ -39,7 +45,8 @@ public class DivideConquerScheduler {
             }
         }
 
-        return divideAndConquer(desiredSubjects, coursesBySubject);
+        List<List<Course>> schedules = divideAndConquer(desiredSubjects, coursesBySubject);
+        return ScheduleEvaluator.sortSchedules(schedules, priority);
     }
 
     private List<List<Course>> divideAndConquer(List<String> subjects, 

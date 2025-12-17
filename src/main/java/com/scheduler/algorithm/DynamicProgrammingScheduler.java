@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.scheduler.logic.PriorityType;
+import com.scheduler.logic.ScheduleEvaluator;
 import com.scheduler.model.Course;
 
 /**
@@ -29,6 +31,10 @@ public class DynamicProgrammingScheduler {
     }
 
     public List<List<Course>> generateSchedules(List<String> desiredSubjects) {
+        return generateSchedules(desiredSubjects, PriorityType.NONE);
+    }
+
+    public List<List<Course>> generateSchedules(List<String> desiredSubjects, PriorityType priority) {
         memo.clear();
         
         Map<String, List<Course>> coursesBySubject = allCourses.stream()
@@ -42,7 +48,8 @@ public class DynamicProgrammingScheduler {
             }
         }
 
-        return dpSolve(desiredSubjects, 0, new ArrayList<>(), coursesBySubject);
+        List<List<Course>> schedules = dpSolve(desiredSubjects, 0, new ArrayList<>(), coursesBySubject);
+        return ScheduleEvaluator.sortSchedules(schedules, priority);
     }
 
     /**

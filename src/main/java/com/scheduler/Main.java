@@ -7,7 +7,9 @@ import java.util.stream.Collectors;
 
 import com.scheduler.gui.SchedulerGUI;
 import com.scheduler.logic.DataLoader;
+import com.scheduler.logic.PriorityType;
 import com.scheduler.logic.Scheduler;
+import com.scheduler.logic.ScheduleEvaluator;
 import com.scheduler.model.Course;
 
 import javafx.application.Application;
@@ -66,18 +68,47 @@ public class Main {
 
         if (desiredSubjects.isEmpty()) {
             System.out.println("No se ingresaron materias.");
+            scanner.close();
             return;
         }
 
-        // 3. Ejecutar el algoritmo de planificación
+        // 3. Seleccionar tipo de priorización
+        System.out.println("\n" + "─".repeat(55));
+        System.out.println("Seleccione el tipo de priorización:");
+        System.out.println("  1. Sin priorización (mostrar todos)");
+        System.out.println("  2. Priorizar menos días de clase");
+        System.out.println("  3. Priorizar menos espacios entre cursos");
+        System.out.print("> ");
+        
+        String priorityInput = scanner.nextLine().trim();
+        PriorityType priority = PriorityType.NONE;
+        
+        switch (priorityInput) {
+            case "1":
+                priority = PriorityType.NONE;
+                break;
+            case "2":
+                priority = PriorityType.FEWER_DAYS;
+                System.out.println("✓ Priorizando horarios con menos días de clase");
+                break;
+            case "3":
+                priority = PriorityType.LESS_GAPS;
+                System.out.println("✓ Priorizando horarios con menos espacios entre cursos");
+                break;
+            default:
+                System.out.println("Opción no válida, usando sin priorización");
+                priority = PriorityType.NONE;
+        }
+
+        // 4. Ejecutar el algoritmo de planificación
         System.out.println("\nBuscando combinaciones de horarios compatibles...\n");
         Scheduler scheduler = new Scheduler(allCourses);
         
         long startTime = System.currentTimeMillis();
-        List<List<Course>> solutions = scheduler.generateSchedules(desiredSubjects);
+        List<List<Course>> solutions = scheduler.generateSchedules(desiredSubjects, priority);
         long endTime = System.currentTimeMillis();
 
-        // 4. Mostrar resultados
+        // 5. Mostrar resultados
         System.out.println("****************************************");
         System.out.println(" RESULTADOS");
         System.out.println("****************************************");
@@ -95,6 +126,7 @@ public class Main {
                 for (Course c : schedule) {
                     System.out.println("   " + c);
                 }
+                System.out.println(ScheduleEvaluator.getScheduleMetrics(schedule));
                 System.out.println();
             }
         }
