@@ -1,10 +1,10 @@
 package com.scheduler.algorithm;
 
 public enum AlgorithmType {
-    BACKTRACKING("Backtracking", "Búsqueda exhaustiva con retroceso"),
-    DIVIDE_CONQUER("Divide y Conquista", "División recursiva del problema"),
-    GREEDY("Algoritmo Goloso", "Selección por heurística local"),
-    DYNAMIC_PROGRAMMING("Programación Dinámica", "Optimización con memorización");
+    BACKTRACKING("Principal", "Búsqueda exhaustiva con retroceso"),
+    DIVIDE_CONQUER("(Test) Divide y Conquista", "División recursiva del problema"),
+    GREEDY("(Test) Algoritmo Goloso", "Selección por heurística local"),
+    DYNAMIC_PROGRAMMING("(Test) Programación Dinámica", "Optimización con memorización");
 
     private final String displayName;
     private final String description;

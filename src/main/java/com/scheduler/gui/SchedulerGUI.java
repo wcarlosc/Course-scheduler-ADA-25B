@@ -10,7 +10,6 @@ import com.scheduler.algorithm.AlgorithmType;
 import com.scheduler.algorithm.BenchmarkResult;
 import com.scheduler.logic.DataLoader;
 import com.scheduler.logic.PriorityType;
-import com.scheduler.logic.ScheduleEvaluator;
 import com.scheduler.model.Course;
 
 import javafx.application.Application;
@@ -88,9 +87,10 @@ public class SchedulerGUI extends Application {
         root.setCenter(rightPanel);
 
         // Escena
-        Scene scene = new Scene(root, 1400, 900);
+        Scene scene = new Scene(root, 1200, 900);
         primaryStage.setTitle("Sistema de generacion de Horarios");
         primaryStage.setScene(scene);
+        primaryStage.setMaximized(true);
         primaryStage.show();
     }
 
@@ -123,19 +123,56 @@ public class SchedulerGUI extends Application {
         title.setFont(Font.font("Segoe UI", FontWeight.BOLD, 18));
         title.setStyle("-fx-text-fill: " + PRIMARY_COLOR + ";");
 
-        // Selector de algoritmo
-        Label algoLabel = new Label("Tipo de solución:");
-        algoLabel.setFont(Font.font("Segoe UI", FontWeight.BOLD, 14));
-        algoLabel.setStyle("-fx-text-fill: " + TEXT_COLOR + ";");
+        // GridPane para organizar controles horizontalmente
+        GridPane configGrid = new GridPane();
+        configGrid.setHgap(15);
+        configGrid.setVgap(10);
+        configGrid.setPadding(new Insets(10, 0, 10, 0));
 
+        // Fila 1: Labels
+        Label algoLabel = new Label("Tipo de solución:");
+        algoLabel.setFont(Font.font("Segoe UI", FontWeight.BOLD, 12));
+        algoLabel.setStyle("-fx-text-fill: " + TEXT_COLOR + ";");
+        
+        Label limitLabel = new Label("Máx. soluciones:");
+        limitLabel.setFont(Font.font("Segoe UI", FontWeight.BOLD, 12));
+        limitLabel.setStyle("-fx-text-fill: " + TEXT_COLOR + ";");
+        
+        Label priorityLabel = new Label("Priorización:");
+        priorityLabel.setFont(Font.font("Segoe UI", FontWeight.BOLD, 12));
+        priorityLabel.setStyle("-fx-text-fill: " + TEXT_COLOR + ";");
+
+        configGrid.add(algoLabel, 0, 0);
+        configGrid.add(limitLabel, 1, 0);
+        configGrid.add(priorityLabel, 2, 0);
+
+        // Fila 2: Controles
         algorithmSelector = new ComboBox<>();
         algorithmSelector.getItems().addAll(AlgorithmType.values());
         algorithmSelector.setValue(AlgorithmType.BACKTRACKING);
-        algorithmSelector.setPrefWidth(320);
+        algorithmSelector.setPrefWidth(150);
         algorithmSelector.setStyle(
             "-fx-background-color: " + TEXT_COLOR  + ";" +
             "-fx-text-fill: " + TEXT_COLOR + ";" 
         );
+
+        maxSolutionsSpinner = new Spinner<>();
+        maxSolutionsSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 30000, 10));
+        maxSolutionsSpinner.setEditable(true);
+        maxSolutionsSpinner.setPrefWidth(150);
+
+        prioritySelector = new ComboBox<>();
+        prioritySelector.getItems().addAll(PriorityType.values());
+        prioritySelector.setValue(PriorityType.FEWER_DAYS);
+        prioritySelector.setPrefWidth(150);
+        prioritySelector.setStyle(
+            "-fx-background-color: " + TEXT_COLOR  + ";" +
+            "-fx-text-fill: " + TEXT_COLOR + ";"
+        );
+
+        configGrid.add(algorithmSelector, 0, 1);
+        configGrid.add(maxSolutionsSpinner, 1, 1);
+        configGrid.add(prioritySelector, 2, 1);
 
         // Checkbox para comparar todos
         compareAllCheckbox = new CheckBox("Solo ejecutar test");
@@ -145,36 +182,6 @@ public class SchedulerGUI extends Application {
             algorithmSelector.setDisable(compareAllCheckbox.isSelected());
             maxSolutionsSpinner.setDisable(compareAllCheckbox.isSelected());
         });
-
-        // Selector de cantidad de soluciones
-        Label limitLabel = new Label("Máx. soluciones:");
-        limitLabel.setFont(Font.font("Segoe UI", FontWeight.BOLD, 14));
-        limitLabel.setStyle(
-            "-fx-text-fill: " + TEXT_COLOR + ";" +
-            "-fx-padding: 5 0 0 0;"
-        );
-
-        maxSolutionsSpinner = new Spinner<>();
-        maxSolutionsSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 30000, 10));
-        maxSolutionsSpinner.setEditable(true);
-        maxSolutionsSpinner.setPrefWidth(320);
-
-        // Selector de priorización
-        Label priorityLabel = new Label("Priorización:");
-        priorityLabel.setFont(Font.font("Segoe UI", FontWeight.BOLD, 14));
-        priorityLabel.setStyle(
-            "-fx-text-fill: " + TEXT_COLOR + ";" +
-            "-fx-padding: 5 0 0 0;"
-        );
-
-        prioritySelector = new ComboBox<>();
-        prioritySelector.getItems().addAll(PriorityType.values());
-        prioritySelector.setValue(PriorityType.FEWER_DAYS);
-        prioritySelector.setPrefWidth(320);
-        prioritySelector.setStyle(
-            "-fx-background-color: " + TEXT_COLOR  + ";" +
-            "-fx-text-fill: " + TEXT_COLOR + ";"
-        );
 
         Separator sep1 = new Separator();
         sep1.setStyle("-fx-background-color: " + PRIMARY_COLOR + ";");
@@ -349,9 +356,7 @@ public class SchedulerGUI extends Application {
         statusLabel.setStyle("-fx-text-fill: " + PRIMARY_COLOR + ";");
         statusLabel.setWrapText(true);
 
-        panel.getChildren().addAll(title, algoLabel, algorithmSelector, compareAllCheckbox, 
-                                   limitLabel, maxSolutionsSpinner,
-                                   priorityLabel, prioritySelector,
+        panel.getChildren().addAll(title, configGrid, compareAllCheckbox, 
                                    sep1, subjectsTitle, scrollPane, buttons, statusLabel);
         return panel;
     }
